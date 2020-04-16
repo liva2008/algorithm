@@ -1,4 +1,4 @@
-# PPT of Modern Javascript Data Structure and Algorithms
+# PPT of Modern Javascript Data Structures and Algorithms
 # 现代Javascript的数据结构与算法PPT
 
 [![logo](http://algorithm.jscoding.net/img/logo.svg)](http://algorithm.jscoding.net)
