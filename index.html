@@ -1,71 +1,120 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
 
-		<title>Algorithm</title>
-		<link rel="Shortcut Icon" href="img/fav.ico" type="image/x-icon" />
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/monokai.css">
+	<title>Algorithm</title>
+	<link rel="Shortcut Icon" href="img/fav.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-	<audio style="height:20px;" src="music/SundialDreams.mp3" id="aud" autoplay="autoplay" controls="controls" preload="auto"></audio>
-		<div class="reveal">
-			<div class="slides">
-<section>
-    <h1>数据结构与算法</h1>
-    <h3>李艳生</h3>
-	<h3>湖北师范大学</h3>
-	<h3>物理与电子科学学院</h3>
-    <h3>2020年春季</h3>
-</section>
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/monokai.css">
+	<style>
+		.box {
+			width: 100%;
+			/* 设置元素两端对齐 */
+			text-align: justify;
+		}
 
-<section>
-    <h2>目 录</h2>
-    <ul>
-    <li><a href='array.html'>数组(Array)</a></li>
-    <li><a href='stack.html'>栈(Stack)</a></li>
-	<li><a href='queue.html'>队列(Queue)</a></li>
-	<li><a href='linkdedlist.html'>链表(LinkedList)</a></li>
-	<li><a href='set.html'>集合(Set)</a></li>
-	<li><a href='map.html'>字典(Map)</a></li>
-	<li><a href='hashmap.html'>散列表(HashMap)</a></li>
-	<li><a href='recursion.html'>递归(Recursion)</a></li>
-    </ul>
-</section>
-			</div>
+		/* 这里的伪元素一定要加上，不然span元素不能两端对齐 */
+		.box:after {
+			content: "";
+			display: inline-block;
+			overflow: hidden;
+			width: 100%;
+		}
+
+		.box span {
+			width: 100px;
+			height: 12px;
+			/* 设置盒子为行内块 */
+			display: inline-block;
+			border-radius: 5px;
+			/* 设置盒子内元素水平居中 */
+			text-align: center;
+			vertical-align: middle;
+			/* 设置盒子内容垂直居中 */
+			line-height: 12px;
+		}
+	</style>
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+
+<body>
+	<div class="box">
+		<span>
+		</span>
+		<span>
+			<a href="https://github.com/liva2008/algorithm">GitHub</a>
+		</span>
+	</div>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<a href="http://algorithm.jscoding.net/"></a><img style="border: 0px;" src="img/logo.svg"
+					height="80px"></a>
+				<h1>数据结构与算法</h1>
+				<h3>李艳生</h3>
+				<h3>湖北师范大学</h3>
+				<h3>物理与电子科学学院</h3>
+				<h3>2020年春季</h3>
+				<audio style="height:30px;" src="music/SundialDreams.mp3" id="aud" autoplay="autoplay"
+					controls="controls" preload="auto"></audio>
+			</section>
+
+			<section>
+				<h2>目 录</h2>
+				<ul>
+					<li><a href='array.html' target="_blank">数组(Array)</a></li>
+					<li><a href='stack.html' target="_blank">栈(Stack)</a></li>
+					<li><a href='queue.html' target="_blank">队列(Queue)</a></li>
+					<li><a href='linkdedlist.html' target="_blank">链表(LinkedList)</a></li>
+					<li><a href='set.html' target="_blank">集合(Set)</a></li>
+					<li><a href='map.html' target="_blank">字典(Map)</a></li>
+					<li><a href='hashmap.html' target="_blank">散列表(HashMap)</a></li>
+					<li><a href='recursion.html' target="_blank">递归(Recursion)</a></li>
+				</ul>
+			</section>
 		</div>
+	</div>
 
-		<script src="js/reveal.js"></script>
+	<script src="js/reveal.js"></script>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				hash: true,
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/highlight/highlight.js' },
-					{ src: 'plugin/notes/notes.js', async: true }
-				]
-			});
-		</script>
-		
-	</body>
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			hash: true,
+			dependencies: [{
+					src: 'plugin/markdown/marked.js'
+				},
+				{
+					src: 'plugin/markdown/markdown.js'
+				},
+				{
+					src: 'plugin/highlight/highlight.js'
+				},
+				{
+					src: 'plugin/notes/notes.js',
+					async: true
+				}
+			]
+		});
+	</script>
+
+</body>
+
 </html>
