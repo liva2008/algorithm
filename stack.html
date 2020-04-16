@@ -1,0 +1,517 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
+
+		<title>Stack</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/moon.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+<section>
+    <h1>栈(Stack)</h1>
+    <h3>李艳生</h3>
+    <h3>湖北师范大学</h3>
+    <h3>物理与电子科学学院</h3>
+    <h3>2020年春季</h3>
+</section>
+
+<section>
+    <h2>栈</h2>
+    <div>
+        <img src="img/3/1.png" height="250">
+        <br>图1 书
+    </div>
+</section>
+
+<section>
+<h2>栈概念</h2>
+<ul>
+    <li>一组遵守后进先出(LIFO)的有序集合</li>
+    <li>一个栈包含栈底，栈顶，栈指针</li>
+    <li>添加或删除操作只能在栈顶</li>
+    <li>新元素在栈顶，旧元素在栈底</li>
+    <li>生活实例:一叠盘子</li>
+    <li>计算机实例:函数嵌套调用，浏览器历史记录</li>
+</ul>
+</section>
+
+<section>
+<h2>栈操作</h2>
+<ul>
+    <li>建栈</li>
+    <li>进栈</li>
+    <li>出栈</li>
+    <li>查看栈顶</li>
+    <li>检查栈空</li>
+    <li>清空栈</li>
+</ul>
+</section>
+
+<section>
+<h2>算法演示</h2>
+<input onclick='push2()' style='font-size:5rem' type='button' value='进栈'>
+<input onclick='pop2()' style='font-size:5rem' type='button' value='出栈'><br>
+<canvas border='3px' id='mycvs2' width='800' height='600'>
+</canvas>
+<script>
+class Stack{
+    constructor(){
+        this.items = [];
+    }
+    push(element){
+        this.items.push(element);
+    }
+    pop(){
+        return this.items.pop();
+    }
+    peek(){
+        return this.items[this.items.length -1];        
+    }
+    isEmpty(){
+        return this.items.length === 0;
+    }
+    clear(){
+        this.items = [];
+    }
+}
+let mycanvas = document.getElementById('mycvs2');
+let mycontext = mycanvas.getContext('2d');
+let stack = new Stack();
+let temp = [];
+let op = 0;
+function push2(){
+    let input = prompt('请输入入栈数据');
+    if(input != null){
+        stack.push(input);
+        temp.push(input);
+        mycontext.font = '50px Georgia';
+        mycontext.fillStyle = '#ffffff';
+        mycontext.fillText('进', op * 120, 590);
+        for(let i = 0; i < temp.length; i++){
+            mycontext.fillStyle = '#ff0000';
+            mycontext.fillRect(op * 110, 460 - i*70,100, 70);
+            mycontext.font = '50px Georgia';
+            mycontext.fillStyle = '#ffffff';
+            mycontext.fillText(temp[i], op * 120, 520 - i*70);
+        }
+        op++;   
+    }
+}
+
+function pop2(){
+    let ret = stack.pop();
+    temp.pop();
+    mycontext.font = '50px Georgia';
+    mycontext.fillStyle = '#ffffff';
+    mycontext.fillText('出', op * 120, 590);
+    for(let i = 0; i < temp.length; i++){
+        mycontext.fillStyle = '#ff0000';
+        mycontext.fillRect(op * 110, 460 - i*70,100, 70);
+        mycontext.font = '50px Georgia';
+        mycontext.fillStyle = '#ffffff';
+        mycontext.fillText(temp[i], op * 120, 520 - i*70);
+    }
+    op++; 
+    alert(`出栈数据:${ret}`);
+}
+</script>
+</section>
+<section>
+<h2>栈实现</h2>
+<ul>
+    <li>基于数组的栈</li>
+    <li>基于对象的栈</li>
+</ul>
+</section>
+
+<section>
+<h2>基于数组建栈</h2>
+<ul>
+    <li>创建一个类封装栈</li>
+    <li>利用数组操作实现栈操作</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+class Stack{
+    constructor(){
+        this.items = [];
+    }
+    push(element){}
+    pop(){}
+    peek(){}
+    isEmpty(){}
+    clear(){}
+}
+</code></pre>
+</section>
+
+<section>
+<h2>进栈</h2>
+<ul>
+    <li>进栈只能在栈顶添加元素</li>
+    <li>利用数组push操作实现进栈</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+push(element){
+    this.items.push(element);
+}
+</code></pre>
+</section>
+<section>
+<h2>出栈</h2>
+<ul>
+    <li>出栈只能在栈顶删除元素</li>
+    <li>利用数组pop操作实现出栈</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+pop(){
+    return this.items.pop();
+}
+</code></pre>
+</section>
+<section>
+<h2>查看栈顶元素</h2>
+<ul>
+    <li>查看栈顶只获取栈顶元素,不删除</li>
+    <li>利用数组length属性</li>
+
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+peek(){
+    return this.items[this.items.length - 1];
+}
+
+</code></pre>
+</section>
+<section>
+<h2>检查栈空</h2>
+<ul>
+    <li>栈空返回true,不空返回false</li>
+    <li>利用数组length属性</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+
+isEmpty(){
+    return this.items.length === 0;
+}
+</code></pre>
+</section>
+<section>
+<h2>清空栈</h2>
+<ul>
+    <li>将栈中所有元素清空</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+clear(){
+    this.items = [];
+}
+</code></pre>
+</section>
+
+<section>
+<h2>栈使用</h2>
+<ul>
+    <li>利用new创建栈对象</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+//建栈
+let stack = new Stack();
+//判栈空
+console.log(stack.isEmpty());
+//进栈
+stack.push(1);
+stack.push(2);
+//查看栈顶
+console.log(stack.peek());
+//出栈
+console.log(stack.pop());
+//清空栈
+stack.clear();
+console.log(stack.isEmpty());
+</code></pre>
+<input type='button' style='font-size:5rem;' onclick='ex2()' value='运行'>
+<div id='ex2' style='font-size:6rem;'></div>
+<script>
+
+function ex2(){
+    let res = document.getElementById('ex2');
+
+    //建栈
+    let stack = new Stack();
+    //判栈空
+    //console.log(stack.isEmpty());
+    res.innerHTML = `${stack.isEmpty()},`
+
+    //进栈
+    stack.push(1);
+    stack.push(2);
+    //查看栈顶
+    //console.log(stack.peek());
+    res.innerHTML += `${stack.peek()},`
+    //出栈
+    //console.log(stack.pop());
+    res.innerHTML += `${stack.pop()},`
+    //清空栈
+    stack.clear();
+    //console.log(stack.isEmpty());
+    res.innerHTML += `${stack.isEmpty()}`
+}
+</script>
+</section>
+
+<section>
+<h2>基于对象建栈</h2>
+<ul>
+    <li>创建一个类封装栈</li>
+    <li>利用对象操作实现栈操作</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+class Stack{
+    constructor(){
+        this.count = 0;
+        this.items = {};
+    }
+    push(element){}
+    pop(){}
+    peek(){}
+    isEmpty(){}
+    clear(){}
+}
+</code></pre>
+</section>
+
+<section>
+<h2>进栈</h2>
+<ul>
+    <li>进栈只能在栈顶添加元素</li>
+    <li>利用对象键值对操作实现进栈,this.count作为键，插入元素作为值</li>
+    <li>递增count变量</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+push(element){
+    this.items[this.count] = element;
+    this.count++;
+}
+</code></pre>
+</section>
+<section>
+<h2>检查栈空</h2>
+<ul>
+    <li>栈空返回true,不空返回false</li>
+    <li>利用变量count</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+isEmpty(){
+    return this.count === 0;
+}
+</code></pre>
+</section>
+<section>
+<h2>出栈</h2>
+<ul>
+    <li>出栈只能在栈顶删除元素</li>
+    <li>利用变量count操作实现出栈</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+pop(){
+    this.count--;
+    const ret = this.items[this.count];
+    delete this.items[this.count];
+    return ret;
+}
+</code></pre>
+</section>
+<section>
+<h2>查看栈顶元素</h2>
+<ul>
+    <li>查看栈顶只获取栈顶元素,不删除</li>
+    <li>利用变量count</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+peek(){
+    return this.items[this.count - 1];
+}
+
+</code></pre>
+</section>
+
+<section>
+<h2>清空栈</h2>
+<ul>
+    <li>将栈中所有元素清空</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+clear(){
+    this.count = 0;
+    this.items = {};
+}
+</code></pre>
+</section>
+
+<section>
+<h2>栈使用</h2>
+<ul>
+    <li>利用new创建栈对象</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+//建栈
+let stack = new Stack();
+//判栈空
+console.log(stack.isEmpty());
+//进栈
+stack.push(1);
+stack.push(2);
+//查看栈顶
+console.log(stack.peek());
+//出栈
+console.log(stack.pop());
+//清空栈
+stack.clear();
+console.log(stack.isEmpty());
+</code></pre>
+<input type='button' style='font-size:5rem;' onclick='ex3()' value='运行'>
+<div id='ex3' style='font-size:6rem;'></div>
+<script>
+class Stack1{
+    constructor(){
+        this.count = 0;
+        this.items = {};
+    }
+    push(element){
+        this.items[this.count] = element;
+        this.count++;
+    }
+    pop(){
+        this.count--;
+        const ret = this.items[this.count];
+        delete this.items[this.count];
+        return ret;
+    }
+    peek(){
+        return this.items[this.count - 1];        
+    }
+    isEmpty(){
+        return this.count === 0;
+    }
+    clear(){
+        this.count = 0;
+        this.items = {};
+    }
+}
+function ex3(){
+    let res = document.getElementById('ex3');
+
+    //建栈
+    let stack = new Stack1();
+    //判栈空
+    //console.log(stack.isEmpty());
+    res.innerHTML = `${stack.isEmpty()},`
+
+    //进栈
+    stack.push(1);
+    stack.push(2);
+    //查看栈顶
+    //console.log(stack.peek());
+    res.innerHTML += `${stack.peek()},`
+    //出栈
+    //console.log(stack.pop());
+    res.innerHTML += `${stack.pop()},`
+    //清空栈
+    stack.clear();
+    //console.log(stack.isEmpty());
+    res.innerHTML += `${stack.isEmpty()}`
+}
+</script>
+</section>
+<section>
+<h2>用栈解决问题</h2>
+<ul>
+    <li>将十进制转换成二进制。</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+function decimalToBinary(decNumber) {   
+    const remStack = new Stack();   
+    let number = decNumber;   
+    let rem;   
+    let binaryString = '';   
+    while (number > 0) {      
+        rem = Math.floor(number % 2);      
+        remStack.push(rem);      
+        number = Math.floor(number / 2);    
+    }   
+    while (!remStack.isEmpty()) {      
+        binaryString += `${remStack.pop()}`;   
+    }   
+    return binaryString; 
+} 
+alert(decimalToBinary(10));
+</code></pre>
+<input type='button' style='font-size:5rem;' onclick='ex4()' value='运行'>
+<div id='ex4' style='font-size:6rem;'></div>
+<script>
+function decimalToBinary(decNumber) {   
+    const remStack = new Stack();   
+    let number = decNumber;   
+    let rem;   
+    let binaryString = '';   
+    while (number > 0) {      
+        rem = Math.floor(number % 2);      
+        remStack.push(rem);      
+        number = Math.floor(number / 2);    
+    }   
+    while (!remStack.isEmpty()) {      
+        binaryString += `${remStack.pop()}`;   
+    }   
+    return binaryString; 
+} 
+function ex4(){
+    let res = document.getElementById('ex4');
+    alert(decimalToBinary(10));
+}
+</script>
+</section>
+<section>
+<h2>任务</h2>
+<h3>利用栈设计一种十进制转十六进制算法，并测试十进制数100转换十六进制。</h3>
+</section>
+
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+                transition: 'slide',
+                slideNumber:true,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/highlight/highlight.js' },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>

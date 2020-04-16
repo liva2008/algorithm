@@ -1,0 +1,646 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
+
+    <title>字典Map</title>
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/moon.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css">
+
+    <script src="echarts.js"></script>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <dialog id="indialog">
+        <h2>输入对话框</h2><br>
+        <div id="inmessage"></div><br>
+        <input id="input" style="height:50px;font-size:50px;" size="10" value="">
+        <div>
+            <br>
+            <button id="okindialog">确定</button>
+            <button id="closeindialog">关闭</button>
+        </div>
+    </dialog>
+    <dialog id="outdialog">
+        <h2>输出对话框</h2><br>
+        <div id="outmessage"></div>
+        <div>
+            <br>
+            <button id="closeoutdialog">关闭</button>
+        </div>
+    </dialog>
+    <script>
+        let useragent = navigator.userAgent;
+        let inputEvent = new Event("inputComplete"); //自定义输入完成事件
+        document.getElementById("closeindialog").onclick = function() {
+            document.querySelector("#indialog").close();
+        };
+        document.getElementById("okindialog").onclick = function() {
+            document.querySelector("#indialog").close();
+            let input = document.getElementById("input");
+            input.dispatchEvent(inputEvent);
+        };
+        document.getElementById("closeoutdialog").onclick = function() {
+            document.querySelector("#outdialog").close();
+        };
+        //输入对话框
+        function inputDialog(s) {
+            if (useragent.indexOf("Chrome") > -1) {
+                let dialog = document.querySelector("#indialog");
+                let msg = document.getElementById("inmessage");
+                msg.innerHTML = `<font size="20">${s}</font>`;
+                document.getElementById("input").value = "";
+                dialog.showModal();
+            } else {
+                let input = prompt(s);
+                if (input != null) {
+                    let input1 = document.getElementById("input");
+                    input1.value = input;
+                    input1.dispatchEvent(inputEvent);
+                }
+            }
+        }
+        //输出对话框
+        function outputDialog(s) {
+            if (useragent.indexOf("Chrome") > -1) {
+                let dialog = document.querySelector("#outdialog");
+                let msg = document.getElementById("outmessage");
+                msg.innerHTML = `<font size="20">${s}</font>`;
+                dialog.showModal();
+            } else {
+                alert(s);
+            }
+        }
+    </script>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <h1>字典(Map)</h1>
+                <h3>李艳生</h3>
+                <h3>湖北师范大学</h3>
+                <h3>物理与电子科学学院</h3>
+                <h3>2020年春季</h3>
+            </section>
+
+            <section>
+                <h2>回顾</h2>
+                <ul>
+                    <li>
+                        <font color="#ff0000">集合</font>:元素不重复
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>引入</h2>
+                <h3>请大家思考我们要存储一组<font color="#ff0000">值不重复的</font>有序数据，除了集合，还可以用什么数据结构？</h3>
+            </section>
+
+            <section>
+                <h2>内容</h2>
+                <h3>字典(重点)</h3>
+                <h3>原生Map</h3>
+                <h3>WeakMap与WeakSet</h3>
+                <h3>任务</h3>
+            </section>
+
+            <section>
+                <h2>字典</h2>
+                <img src="img/7/1.jpg" height="300">
+                <img src="img/7/2.jpg" height="300">
+            </section>
+            <section>
+                <h2>字典</h2>
+                <ul>
+                    <li>字典中存储的是[键，值]对，其中键名是用来查询特定元素的</li>
+                    <li>字典中键不重复</li>
+                    <li>集合以[值，值]的形式存储元素</li>
+                    <li>字典以[键，值]的形式存储元素</li>
+                    <li>字典也称作映射、符号表或关联数组</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>字典操作</h2>
+                <ul>
+                    <li>创建</li>
+                    <li>查找</li>
+                    <li>添加</li>
+                    <li>删除</li>
+                    <li>清空</li>
+                    <li>判空</li>
+                    <li>长度</li>
+                    <li>辅助方法</li>
+                </ul>
+            </section>
+            <section>
+                <h2>算法演示</h2>
+                <input type='button' style='font-size:5rem;' onclick='ex1()' value='添加元素'>
+                <input type='button' style='font-size:5rem;' onclick='ex2()' value='删除元素'>
+                <input type='button' style='font-size:5rem;' onclick='ex4()' value='查找元素'>
+                <input type='button' style='font-size:5rem;' onclick='ex3()' value='显示集合'>
+                <script>
+                    function defaultToString(item) {
+                        if (item === null) {
+                            return 'NULL';
+                        } else if (item === undefined) {
+                            return 'UNDEFINED';
+                        } else if (typeof item === 'string' || item instanceof String) {
+                            return `${item}`;
+                        }
+                        return item.toString();
+                    }
+                    class ValuePair {
+                        constructor(key, value) {
+                            this.key = key;
+                            this.value = value;
+                        }
+                        toString() {
+                            return `[#${this.key}: ${this.value}]`;
+                        }
+                    }
+                    class Dictionary {
+                        constructor(toStrFn = defaultToString) {
+                            this.toStrFn = toStrFn; //转字符串方法
+                            this.table = {};
+                        }
+                        hasKey(key) {
+                            return this.table[this.toStrFn(key)] != null;
+                        }
+                        set(key, value) {
+                            if (key != null && value != null) {
+                                const tableKey = this.toStrFn(key);
+                                this.table[tableKey] = new ValuePair(key, value);
+                                return true;
+                            }
+                            return false;
+                        }
+                        remove(key) {
+                            if (this.hasKey(key)) {
+                                delete this.table[this.toStrFn(key)];
+                                return true;
+                            }
+                            return false;
+                        }
+                        get(key) {
+                            const valuePair = this.table[this.toStrFn(key)];
+                            return valuePair == null ? undefined : valuePair.value;
+                        }
+                        keyValues() {
+                            return Object.values(this.table);
+                        }
+                        keys() {
+                            return this.keyValues().map(valuePair => valuePair.key);
+                        }
+                        values() {
+                            return this.keyValues().map(valuePair => valuePair.value);
+                        }
+                        forEach(callbackFn) {
+                            const valuePairs = this.keyValues();
+                            for (let i = 0; i < valuePairs.length; i++) {
+                                const result = callbackFn(valuePairs[i].key, valuePairs[i].value);
+                                if (result === false) {
+                                    break;
+                                }
+                            }
+                        }
+                        size() {
+                            return Object.keys(this.table).length;
+                        }
+                        clear() {
+                            this.table = {};
+                        }
+                        isEmpty() {
+                            return this.size() === 0;
+                        }
+                        toString() {
+                            if (this.isEmpty()) {
+                                return '';
+                            }
+                            const valuePairs = this.keyValues();
+                            let objString = `${valuePairs[0].toString()}`;
+                            for (let i = 1; i < valuePairs.length; i++) {
+                                objString = `${objString},${valuePairs[i].toString()}`;
+                            }
+                            return objString;
+                        }
+                    }
+
+                    let dict = new Dictionary(); //定义字典
+
+                    function ex1() {
+                        inputDialog(`请输入要添加的字典元素，格式为(键:值)`);
+                        let input = document.getElementById("input");
+                        let proc = function() {
+                            if (input.value != null) {
+                                let a = input.value.split(':');
+                                dict.set(a[0], a[1]);
+                            }
+                            input.removeEventListener("inputComplete", proc);
+                        };
+                        input.addEventListener("inputComplete", proc);
+
+                        //let input = prompt('请输入要添加的集合元素：');
+                        //if (input != null) {
+                        //    set.add(input);
+                        //}
+                    }
+
+                    function ex2() {
+                        /*
+                        let input = prompt('请输入要删除的集合元素：');
+                        if (input != null) {
+                            dict.remove(input)
+                        }
+                        */
+                        inputDialog('请输入要删除的字典键：');
+                        let input = document.getElementById("input");
+                        let proc = function() {
+                            if (input.value != null) {
+                                dict.remove(input.value);
+                            }
+                            input.removeEventListener("inputComplete", proc);
+                        }
+                        input.addEventListener("inputComplete", proc)
+                    }
+
+                    function ex3() {
+                        outputDialog(`字典为{${dict.toString()}}`);
+                        //alert(`集合为{${set.values().toString()}}`);
+                    }
+                    function ex4(){
+                        inputDialog('请输入要查找的字典键：');
+                        let input = document.getElementById("input");
+                        let proc = function() {
+                            if (input.value != null) {
+                                outputDialog(`查找字典值为：${dict.get(input.value)}`);
+                            }
+                            input.removeEventListener("inputComplete", proc);
+                        }
+                        input.addEventListener("inputComplete", proc)
+                    }
+                </script>
+            </section>
+            <section>
+                <h2>创建字典</h2>
+                <ul>
+                    <li>JavaScript 的对象属性不重复，可保证字典中键是唯一的。</li>
+                    <li>使用对象而不是数组来表示字典</li>
+                    <li>对象属性名只能是字符串，属性值可以是任何类型</li>
+                    <li>属性名：字典键字符串，属性值：{键:值}</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>创建字典</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+function defaultToString(item) {
+    if (item === null) {
+        return 'NULL';
+    } else if (item === undefined) {
+        return 'UNDEFINED';
+    } else if (typeof item === 'string' || item instanceof String) {
+        return `${item}`;
+    }
+    return item.toString(); 
+}   
+class Dictionary {
+    constructor(toStrFn = defaultToString) {
+        this.toStrFn = toStrFn;  //转字符串方法
+        this.table = {};
+    }
+    set(key,value){} //向字典中添加新元素
+    remove(key){}    //移除键值对应的数据值
+    hasKey(key){}    //查找存不存在
+    get(key){}       //查找
+    clear(){}        //清空
+    size(){}         //长度
+    isEmpty(){}      //判空
+    keys(){}         //返回所有键数组
+    values(){}       //返回所在值数组
+    keyValues(){}    //返回所有{键:值}数组
+    forEach(callbackFn){} //迭代
+}
+    </code></pre>
+            </section>
+
+            <section>
+                <h2>存在查找</h2>
+                <ul>
+                    <li>如果元素在字典中，返回true，否则返回false。</li>
+                    <li>用来检验某个元素是否存在于字典中</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+hasKey(key) {
+    return this.table[this.toStrFn(key)] != null;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>添加元素</h2>
+                <ul>
+                    <li>该方法接收key 和value 作为参数</li>
+                    <li>key转成字符串作为属性名</li>
+                    <li>为了保存字典原始键值数据，原始的key 和value同时作为属性值</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>添加元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+class ValuePair {
+    constructor(key, value) {
+        this.key = key;
+        this.value = value;
+    }
+    toString() {
+        return `[#${this.key}: ${this.value}]`;
+    }
+}
+set(key, value) {
+    if (key != null && value != null) {
+        const tableKey = this.toStrFn(key); 
+        this.table[tableKey] = new ValuePair(key, value); 
+        return true;
+    }
+    return false;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>删除元素</h2>
+                <ul>
+                    <li>首先，验证给定的key 是否存在于字典中</li>
+                    <li>如果存在，就从字典中移除，返回true，表示元素被移除；否则返回false</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>删除元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+remove(key) {
+    if (this.hasKey(key)) {
+        delete this.table[this.toStrFn(key)];
+        return true;
+    }
+    return false;
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>查找元素</h2>
+                <ul>
+                    <li>如果元素在字典中，返回元素值，否则返回undefined。</li>
+                    <li>用来查找某个元素</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+// 方法一
+get(key) {
+    const valuePair = this.table[this.toStrFn(key)]; 
+    return valuePair == null ? undefined : valuePair.value; 
+}
+
+//方法二
+get(key) {
+    if (this.hasKey(key)) {
+        return this.table[this.toStrFn(key)];
+    }
+    return undefined;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>辅助方法</h2>
+                <ul>
+                    <li>返回字典中键值对数组，键数组，值数组</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+//方法一
+keyValues() {
+    return Object.values(this.table);
+}
+//方法二
+keyValues() {
+    const valuePairs = [];
+    for (const k in this.table) { 
+        if (this.hasKey(k)) {
+            valuePairs.push(this.table[k]); 
+        }
+    }
+    return valuePairs;
+}
+keys() {
+    return this.keyValues().map(valuePair => valuePair.key);
+}
+values() {
+    return this.keyValues().map(valuePair => valuePair.value);
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>迭代元素</h2>
+                <ul>
+                    <li>迭代字典中的每个键值对</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+forEach(callbackFn) {
+    const valuePairs = this.keyValues();
+    for (let i = 0; i < valuePairs.length; i++) { 
+        const result = callbackFn(valuePairs[i].key, valuePairs[i].value); 
+        if (result === false) {
+            break; 
+        }
+    }
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>获取长度</h2>
+                <ul>
+                    <li>返回字典中有多少元素</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+size() {
+    return Object.keys(this.table).length;
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>清空</h2>
+                <ul>
+                    <li>清空字典</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+clear() {
+    this.table = {};
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>判空</h2>
+                <ul>
+                    <li>判断字典是否为空，为空返回true,否则返回false</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+isEmpty() {
+    return this.size() === 0;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>转字符串</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+toString() {
+    if (this.isEmpty()) {
+        return '';
+    }
+    const valuePairs = this.keyValues();
+    let objString = `${valuePairs[0].toString()}`;
+    for (let i = 1; i < valuePairs.length; i++) {
+        objString = `${objString},${valuePairs[i].toString()}`;
+    }
+    return objString;
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>字典使用</h2>
+                <ul>
+                    <li>用new创建Dictionary对象</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+//创建
+const dictionary = new Dictionary();
+//添加
+dictionary.set('Gandalf', 'gandalf@email.com');
+dictionary.set('John', 'johnsnow@email.com');
+dictionary.set('Tyrion', 'tyrion@email.com');
+//查找
+console.log(dictionary.hasKey('Gandalf'));  //true
+console.log(dictionary.size()); //3
+console.log(dictionary.keys());  //["Gandalf", "John", "Tyrion"]
+console.log(dictionary.values()); //["gandalf@email.com", "johnsnow@email.com", "tyrion@email.com"]
+console.log(dictionary.get('Tyrion')); //tyrion@email.com
+dictionary.remove('John');
+dictionary.forEach((k, v) => {
+    console.log('forEach: ', `key: ${k}, value: ${v}`);
+});
+</code></pre>
+            </section>
+
+            <section>
+                <h2>原生Map</h2>
+                <ul>
+                    <li>ECMAScript 2015 新增了Map类作为JavaScript API</li>
+                </ul>
+            </section>
+            <section>
+                <h2>原生Map</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+const map = new Map();
+map.set('Gandalf', 'gandalf@email.com');
+map.set('John', 'johnsnow@email.com');
+map.set('Tyrion', 'tyrion@email.com');
+console.log(map.has('Gandalf')); // true
+console.log(map.size); // 3
+console.log(map.keys()); // 输出{"Gandalf", "John", "Tyrion"}
+console.log(map.values()); // 输出{"gandalf@email.com", "johnsnow@email.com","tyrion@email.com"}
+console.log(map.get('Tyrion')); // tyrion@email.com
+map.delete('John');
+</code></pre>
+            </section>
+            <section>
+                <h2>WeakMap与WeakSet</h2>
+                <ul>
+                    <li>ES2015 还增加了它们的弱化版本，WeakSet 和WeakMap</li>
+                    <li>WeakSet 或WeakMap 类没有entries、keys 和values 等方法</li>
+                    <li>只能用对象作为键</li>
+                    <li>创建和使用这两个类主要是为了性能</li>
+                </ul>
+            </section>
+            <section>
+                <h2>WeakMap与WeakSet</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+const map = new WeakMap();
+const ob1 = { name: 'Gandalf' }; 
+const ob2 = { name: 'John' };
+const ob3 = { name: 'Tyrion' };
+map.set(ob1, 'gandalf@email.com'); 
+map.set(ob2, 'johnsnow@email.com');
+map.set(ob3, 'tyrion@email.com');
+console.log(map.has(ob1)); 
+console.log(map.get(ob3));
+map.delete(ob2); 
+</code></pre>
+            </section>
+
+            <section>
+                <h2>任务</h2>
+                <h3>利用字典结构设计一款通讯录软件，通讯录信息包含姓名、电话、邮箱等信息，可以添加、删除、查找信息。</h3>
+            </section>
+        </div>
+    </div>
+
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info about config & dependencies:
+        // - https://github.com/hakimel/reveal.js#configuration
+        // - https://github.com/hakimel/reveal.js#dependencies
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            slideNumber: true,
+            math: {
+                mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                config: 'TeX-AMS_HTML-full', // See http://docs.mathjax.org/en/latest/config-files.html
+                // pass other options into `MathJax.Hub.Config()`
+                TeX: {
+                    Macros: {
+                        RR: "{\\bf R}"
+                    }
+                }
+            },
+            dependencies: [{
+                    src: 'plugin/markdown/marked.js'
+                },
+                {
+                    src: 'plugin/markdown/markdown.js'
+                },
+                {
+                    src: 'plugin/highlight/highlight.js'
+                },
+                {
+                    src: 'plugin/notes/notes.js',
+                    async: true
+                },
+                {
+                    src: 'plugin/math/math.js',
+                    async: true
+                }
+            ]
+        });
+    </script>
+</body>
+
+</html>

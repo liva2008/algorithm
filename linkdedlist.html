@@ -1,0 +1,1140 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
+
+    <title>LinkedList</title>
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/moon.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css">
+
+    <script src="echarts.js"></script>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <h1>链表(LinkedList)</h1>
+                <h3>李艳生</h3>
+                <h3>湖北师范大学</h3>
+                <h3>物理与电子科学学院</h3>
+                <h3>2020年春季</h3>
+            </section>
+
+            <section>
+                <h2>回顾</h2>
+                <ul>
+                    <li>回顾第三四周学习的<font color='#ff0000'>栈</font>和<font color='#ff0000'>队列</font>
+                    </li>
+                    <li>回顾第二周学习的<font color='#ff0000'>数组</font>
+                    </li>
+                    <li>数组的优点？</li>
+                    <li>数组的缺点？</li>
+                    <li>数组的内存存储结构？</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>引入</h2>
+                <h3>请大家思考我们要存储一组有序数据，可以用什么数据结构？</h3>
+            </section>
+
+            <section>
+                <h2>内容</h2>
+                <h3>链表(重点)</h3>
+                <h3>双向链表(重点)</h3>
+                <h3>循环链表</h3>
+                <h3>任务</h3>
+            </section>
+
+            <section>
+                <h2>链表</h2>
+                <div>
+                    <img src="img/5/01.png" height="100">
+                    <br>图1 火车
+                </div>
+                <div>
+                    <img src="img/5/02.png" height="100">
+                    <br>图2 链表
+                </div>
+            </section>
+
+            <section>
+                <h2>链表</h2>
+                <ul>
+                    <li>链表存储一组有序数据</li>
+                    <li>链表中每个数据都带一个指针或链接，指向下一个数据</li>
+                    <li>链表在内存中可以不连续</li>
+                    <li>改变链接指向，高效增删数据</li>
+                </ul>
+            </section>
+
+            <section data-markdown>
+                ## 数组链表对比
+
+                | 项目 | 数组 | 链表 |
+                | :-: | :-- | :-- |
+                | 访问方式 | 随机访问 | 顺序访问 |
+                | 增删效率 | 低 | 高 |
+                | 存储方式 | 连续存储 | 离散存储 |
+                | 长度 | 固定长度 | 动态长度 |
+
+            </section>
+
+            <section>
+                <h2>链表操作</h2>
+                <ul>
+                    <li>创建链表</li>
+                    <li>查找</li>
+                    <li>添加</li>
+                    <li>删除</li>
+                    <li>判空</li>
+                    <li>长度</li>
+                    <li>转字符串</li>
+                </ul>
+            </section>
+            <section>
+                <h2>算法演示</h2>
+                <input type='button' style='font-size:5rem;' onclick='ex1()' value='尾部添加'>
+                <input type='button' style='font-size:5rem;' onclick='ex2()' value='任意添加'>
+                <input type='button' style='font-size:5rem;' onclick='ex3()' value='索引删除'>
+                <input type='button' style='font-size:5rem;' onclick='ex4()' value='元素删除'>
+                <input type='button' style='font-size:5rem;' onclick='ex5()' value='显示链表'>
+                <script>
+                    class Node {
+                        constructor(element) {
+                            this.element = element;
+                            this.next = undefined;
+                        }
+                    }
+
+                    function defaultEquals(a, b) {
+                        return a === b;
+                    }
+                    //头节点定义
+                    class LinkedList {
+                        constructor(equalsFn = defaultEquals) {
+                            this.count = 0; //记录链表长度
+                            this.head = undefined; //链表头指针
+                            this.equalsFn = equalsFn; //判断元素相等
+                        }
+                        getElementAt(index) {
+                            if (index >= 0 && index <= this.count) { //越界检查 
+                                let node = this.head;
+                                for (let i = 0; i < index && node != null; i++) {
+                                    node = node.next;
+                                }
+                                return node;
+                            }
+                            return undefined;
+                        }
+                        indexOf(element) {
+                            let current = this.head; //第一个元素
+                            for (let i = 0; i < this.count && current != null; i++) {
+                                if (this.equalsFn(element, current.element)) { // 判断相等
+                                    return i; // 找到返回元素索引 
+                                }
+                                current = current.next; // 下一个元素
+                            }
+                            return -1; // 没有找到返回-1
+                        }
+                        push(element) {
+                            const node = new Node(element);
+                            let current;
+                            if (this.head == null) { //链表为空 
+                                this.head = node;
+                            } else { //链表非空
+                                current = this.head;
+                                while (current.next != null) {
+                                    current = current.next;
+                                }
+                                // 将其next 赋为新元素，建立链接
+                                current.next = node;
+                            }
+                            this.count++;
+                        }
+                        insert(element, index) {
+                            if (index >= 0 && index <= this.count) { //越界检查
+                                const node = new Node(element);
+                                if (index === 0) { // 在第一个位置添加
+                                    const current = this.head;
+                                    node.next = current;
+                                    this.head = node;
+                                } else { // 中间，尾部添加元素
+                                    const previous = this.getElementAt(index - 1);
+                                    const current = previous.next;
+                                    node.next = current;
+                                    previous.next = node;
+                                }
+                                this.count++; // 更新链表的长度
+                                return true;
+                            }
+                            return false;
+                        }
+                        removeAt(index) {
+                            // 检查越界值
+                            if (index >= 0 && index < this.count) { //越界检查
+                                let current = this.head;
+                                // 移除第一项
+                                if (index === 0) {
+                                    this.head = current.next;
+                                } else { //移除中间，尾部元素
+                                    const previous = this.getElementAt(index - 1);
+                                    current = previous.next;
+                                    previous.next = current.next;
+                                }
+                                this.count--; // 更新长度
+                                return current.element;
+                            }
+                            return undefined;
+                        }
+                        remove(element) {
+                            const index = this.indexOf(element);
+                            return this.removeAt(index);
+                        }
+                        size() {
+                            return this.count;
+                        }
+                        isEmpty() {
+                            return this.size() === 0;
+                        }
+                        toString() {
+                            let ret = '';
+                            if (this.head == null) {
+                                return ret;
+                            }
+                            ret = `head->${this.head.element}`
+                            let current = this.head.next;
+                            for (let i = 1; i < this.size() && current != null; i++) {
+                                ret = `${ret}->${current.element}`;
+                                current = current.next;
+                            }
+                            return ret;
+                        }
+                    }
+
+                    let list = new LinkedList();
+
+                    function ex1() {
+                        let input = prompt('请输入尾部添加数据');
+                        if (input != null) {
+                            list.push(input);
+                        }
+                    }
+
+                    function ex2() {
+                        let input = prompt('请输入任意添加数据及位置，格式:数据|位置');
+                        if (input != null) {
+                            let a = input.split('|');
+                            list.insert(a[0], parseInt(a[1]));
+                        }
+                    }
+
+                    function ex3() {
+                        let input = prompt('请输入删除数据索引');
+                        if (input != null) {
+                            list.removeAt(parseInt(input))
+                        }
+                    }
+
+                    function ex4() {
+                        let input = prompt('请输入删除数据');
+                        if (input != null) {
+                            list.remove(input);
+                        }
+                    }
+
+                    function ex5() {
+                        alert('链表为\n' + list.toString());
+                    }
+                </script>
+            </section>
+            <section>
+                <h2>创建链表</h2>
+                <ul>
+                    <li>链表包含一个头节点和一系列节点，头节点链接指向第一个节点，节点与节点链接在一起。</li>
+                    <li>分别用类封装头节点和节点。</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>创建链表节点</h2>
+                <ul>
+                    <li>链表节点包含元素本身和链接，链接指向下一个节点</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+    //节点定义
+    class Node{
+        constructor(element){
+            this.element = element;
+            this.next = undefined;
+        }
+    }
+    </code></pre>
+            </section>
+
+            <section>
+                <h2>创建头节点</h2>
+                <ul>
+                    <li>头节点包含链表长度、头链接和自定义相等函数属性</li>
+                    <li>头节点包含查找、添加、删除节点方法</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>创建头节点</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+    //自定义判断相等的函数
+    function defaultEquals(a, b) {
+        return a === b;
+    }
+    //头节点定义
+    class LinkedList{
+        constructor(equalsFn = defaultEquals){
+            this.count = 0;             //记录链表长度
+            this.head = undefined;      //链表头指针或链接
+            this.equalsFn = equalsFn;   //判断元素相等
+        }
+        getElementAt(index){} //返回链表中特定位置的元素
+        indexOf(element){} //返回元素在链表中的索引
+    
+        push(element){} // 向链表部添加一个新元素
+        insert(element, index){} //向链表的特定位置插入一个新元素
+        
+        remove(element){} //从链表中移除一个元素
+        removeAt(index){} //从链表的特定位置移除一个元素
+    
+        isEmpty(){} // 链表无元素返回true,否则返回false
+        size(){} //返回链表包含的元素个数,即链表长度
+        toString(){}//转字符串
+    }
+    </code></pre>
+            </section>
+
+            <section>
+                <h2>查找元素</h2>
+                <ul>
+                    <li>给定索引，返回链表中特定位置的元素</li>
+                    <li>没有找到元素返回undefined</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+getElementAt(index) {
+    if (index >= 0 && index <= this.count) {//越界检查 
+        let node = this.head; 
+        for (let i = 0; i < index && node != null; i++) { 
+            node = node.next;
+        }
+        return node; 
+    }
+    return undefined; 
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>查找索引</h2>
+                <ul>
+                    <li>给定元素，返回一个元素的索引</li>
+                    <li>如果在链表中找到了它，就返回元素的索引，否则返回-1。</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+indexOf(element) {
+    let current = this.head; //第一个元素
+    for (let i = 0; i < this.count && current != null; i++) { 
+        if (this.equalsFn(element, current.element)) { // 判断相等
+            return i;// 找到返回元素索引 
+        }
+        current = current.next; // 下一个元素
+    }
+    return -1; // 没有找到返回-1
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>尾部添加元素</h2>
+                <ul>
+                    <li>向链表尾部添加一个新元素</li>
+                    <li>两种情况：链表为空添加第一个元素；链表不为空向其追加元素</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>尾部添加元素</h2>
+                <div>
+                    <img src="img/5/03.png" height="250">
+                    <br>图3 链表为空
+                </div>
+            </section>
+            <section>
+                <h2>尾部添加元素</h2>
+                <div>
+                    <img src="img/5/04.png" height="250">
+                    <br>图4 链表非空
+                </div>
+            </section>
+            <section>
+                <h2>尾部添加元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+push(element) {
+    const node = new Node(element);
+    let current;
+    if (this.head == null) {//链表为空 
+        this.head = node;
+    } else {    //链表非空
+        current = this.head; 
+        while (current.next != null) { 
+            current = current.next;
+        }
+        // 将其next 赋为新元素，建立链接
+        current.next = node; 
+    }
+    this.count++; 
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>任意添加元素</h2>
+                <ul>
+                    <li>给定元素和索引，在任意位置插入一个元素</li>
+                    <li>三种情况：第一个位置，尾部，中间位置分别添加元素</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>任意添加元素</h2>
+                <div>
+                    <img src="img/5/05.png" height="250">
+                    <br>图5 添加第一个位置元素
+                </div>
+            </section>
+
+            <section>
+                <h2>任意添加元素</h2>
+                <div>
+                    <img src="img/5/06.png" height="250">
+                    <br>图6 添加尾部元素
+                </div>
+            </section>
+
+            <section>
+                <h2>任意添加元素</h2>
+                <div>
+                    <img src="img/5/07.png" height="250">
+                    <br>图7 添加中间元素
+                </div>
+            </section>
+
+            <section>
+                <h2>任意添加元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+insert(element, index) {
+    if (index >= 0 && index <= this.count){  //越界检查
+        const node = new Node(element);
+        if (index === 0) { // 在第一个位置添加
+            const current = this.head;
+            node.next = current; 
+            this.head = node;
+        } else { // 中间，尾部添加元素
+            const previous = this.getElementAt(index - 1);
+            const current = previous.next; 
+            node.next = current; 
+            previous.next = node; 
+        }
+        this.count++; // 更新链表的长度
+        return true;
+    }
+    return false;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>删除元素</h2>
+                <ul>
+                    <li>给定索引，从特定位置移除一个元素</li>
+                    <li>两种情况：第一种是移除第一个元素，第二种是移除第一个元素之外的其他元素。</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>删除元素</h2>
+                <div>
+                    <img src="img/5/08.png" height="250">
+                    <br>图8 删除第一个元素
+                </div>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <div>
+                    <img src="img/5/09.png" height="250">
+                    <br>图9 删除尾部元素
+                </div>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <div>
+                    <img src="img/5/10.png" height="250">
+                    <br>图10 删除中间元素
+                </div>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+removeAt(index) {
+    // 检查越界值
+    if (index >= 0 && index < this.count) { //越界检查
+        let current = this.head;
+        // 移除第一项
+        if (index === 0) { 
+            this.head = current.next;
+        } else {//移除中间，尾部元素
+            const previous = this.getElementAt(index - 1);
+            current = previous.next;
+            previous.next = current.next;
+        }
+        this.count--; // 更新长度
+        return current.element;
+    }
+    return undefined; 
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <ul>
+                    <li>给定元素，从链表中移除一个元素</li>
+                    <li>indexOf方法，如果传入元素的值，就可以找到它的位置。调用removeAt 方法并传入该位置。</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+remove(element) {
+    const index = this.indexOf(element);
+    return this.removeAt(index);
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>获取长度</h2>
+                <ul>
+                    <li>链表中元素个数</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+size() {
+    return this.count;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>判空</h2>
+                <ul>
+                    <li>如果列表中没有元素，isEmpty 方法就返回true，否则返回false。</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+isEmpty() {
+    return this.size() === 0;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>转字符串</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+toString(){
+    let ret = '';
+    if(this.head == null){
+        return ret;
+    }
+    ret = `${this.head.element}`
+    let current = this.head.next;
+    for(let i = 1; i < this.size() && current != null; i++){
+        ret = `${ret}->${current.element}`;
+        current = current.next;
+    }
+    return ret;
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>链表使用</h2>
+                <ul>
+                    <li>用new创建LinkedList对象</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+//创建链表
+let list = new LinkedList();
+//尾部添加
+list.push(1);
+list.push(2);
+list.insert(3,list.size());
+//头部添加
+list.insert(4,0);
+//任意位置添加
+list.insert(5,2);
+//删除元素
+list.remove(2);
+//删除第一个元素
+list.removeAt(0);
+</code></pre>
+            </section>
+
+
+            <section>
+                <h2>链表应用</h2>
+                <ul>
+                    <li>用链表创建一个栈</li>
+                    <li>比较用链表头节点或尾节点做栈顶的差别</li>
+                </ul>
+            </section>
+            <section>
+                <h2>链表应用</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+//链表第一个位置做栈顶
+class Stack{
+    constructor(){
+        this.items = new LinkedList();
+    }
+    push(element){
+        this.items.insert(element, 0);
+    }
+    pop(){
+        return this.items.removeAt(0);
+    }
+    peek(){
+        return this.items.head.element;        
+    }
+    isEmpty(){
+        return this.items.size() === 0;
+    }
+    clear(){
+        this.items = new LinkedList();
+    }
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>双向链表</h2>
+                <ul>
+                    <li>双向链表头节点除了有头指针或头链接，还有尾指针或尾链接</li>
+                    <li>双向链表节点除了指向下一个元素，还指向前一个元素</li>
+                </ul>
+                <img src='img/5/11.png'>
+            </section>
+
+            <section>
+                <h2>双向链表操作</h2>
+                <ul>
+                    <li>创建链表</li>
+                    <li>添加</li>
+                    <li>删除</li>
+                    <li>转字符串</li>
+                </ul>
+            </section>
+            <section>
+                <h2>算法演示</h2>
+                <input type='button' style='font-size:5rem;' onclick='ex21()' value='任意添加'>
+                <input type='button' style='font-size:5rem;' onclick='ex31()' value='索引删除'>
+                <input type='button' style='font-size:5rem;' onclick='ex51()' value='显示链表'>
+                <script>
+                    class DoublyNode extends Node {
+                        constructor(element) {
+                            super(element);
+                            this.prev = undefined; // 新增指向前一个元素指针
+                        }
+                    }
+                    class DoublyLinkedList extends LinkedList {
+                        constructor(equalsFn = defaultEquals) {
+                            super(equalsFn);
+                            this.tail = undefined; // 新增的尾指针
+                        }
+                        insert(element, index) {
+                            if (index >= 0 && index <= this.count) {
+                                const node = new DoublyNode(element);
+                                let current = this.head;
+                                if (index === 0) { //添加第一个位置元素
+                                    if (this.head == null) { //链表为空 
+                                        this.head = node;
+                                        this.tail = node;
+                                    } else { //链表非空
+                                        node.next = this.head;
+                                        current.prev = node;
+                                        this.head = node;
+                                    }
+                                } else if (index === this.count) { // 添加最后一项 
+                                    current = this.tail;
+                                    current.next = node;
+                                    node.prev = current;
+                                    this.tail = node;
+                                } else { //添加中间元素
+                                    const previous = this.getElementAt(index - 1);
+                                    current = previous.next;
+                                    node.next = current;
+                                    previous.next = node;
+                                    current.prev = node;
+                                    node.prev = previous;
+                                }
+                                this.count++;
+                                return true;
+                            }
+                            return false;
+                        }
+                        removeAt(index) {
+                            if (index >= 0 && index < this.count) {
+                                let current = this.head;
+                                if (index === 0) { //第一个位置
+                                    this.head = current.next;
+                                    // 如果只有一项，更新tail
+                                    if (this.count === 1) {
+                                        this.tail = undefined;
+                                    } else {
+                                        this.head.prev = undefined;
+                                    }
+                                } else if (index === this.count - 1) { // 最后一项 
+                                    current = this.tail;
+                                    this.tail = current.prev;
+                                    this.tail.next = undefined;
+                                } else { //中间位置
+                                    current = this.getElementAt(index);
+                                    const previous = current.prev;
+                                    // 将previous 与current 的下一项链接起来——跳过current
+                                    previous.next = current.next;
+                                    current.next.prev = previous;
+                                }
+                                this.count--;
+                                return current.element;
+                            }
+                            return undefined;
+                        }
+                        toString() {
+                            let ret = '';
+                            if (this.head == null) {
+                                return ret;
+                            }
+                            ret = `head->${this.head.element}`
+                            let current = this.head.next;
+                            for (let i = 1; i < this.size() && current != null; i++) {
+                                ret = `${ret}<=>${current.element}`;
+                                current = current.next;
+                            }
+                            ret += '<-tail';
+                            return ret;
+                        }
+                    }
+
+                    let dlist = new DoublyLinkedList();
+
+                    function ex21() {
+                        let input = prompt('请输入任意添加数据及位置，格式:数据|位置');
+                        if (input != null) {
+                            let a = input.split('|');
+                            dlist.insert(a[0], parseInt(a[1]));
+                        }
+                    }
+
+                    function ex31() {
+                        let input = prompt('请输入删除数据索引');
+                        if (input != null) {
+                            dlist.removeAt(parseInt(input))
+                        }
+                    }
+
+                    function ex51() {
+                        alert('双向链表为\n' + dlist.toString());
+                    }
+                </script>
+            </section>
+            <section>
+                <h2>创建双向链表</h2>
+                <ul>
+                    <li>双向链表包含头节点和节点，头节点链接指向第一个节点</li>
+                    <li>分别用类封装头节点和节点</li>
+                    <li>双向链表继承单链表</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+class DoublyNode extends Node { 
+    constructor(element) {
+        super(element); 
+        this.prev = undefined; // 新增指向前一个元素链接
+    }
+}
+    
+</code></pre>
+            </section>
+
+            <section>
+                <h2>创建双向链表</h2>
+                <ul>
+                    <li>双向链表包含头节点和节点，头节点链接指向第一个节点</li>
+                    <li>分别用类封装头节点和节点</li>
+                    <li>双向链表继承单链表</li>
+                    <li>重写insert,removeAt方法,其它方法继承</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+class DoublyLinkedList extends LinkedList { 
+    constructor(equalsFn = defaultEquals) {
+        super(equalsFn); 
+        this.tail = undefined; // 新增的尾链接
+    }
+    insert(element, index){} //向链表的特定位置插入一个新元素
+    removeAt(index){} //从链表的特定位置移除一个元素
+    toString(){}
+}
+
+</code></pre>
+            </section>
+
+            <section>
+                <h2>任意添加元素</h2>
+                <ul>
+                    <li>在任意位置插入一个元素</li>
+                    <li>三种情况：添加第一个位置，尾部，中间元素</li>
+                </ul>
+            </section>
+            <section>
+                <h2>任意添加元素</h2>
+                <div>
+                    <img src="img/5/12.png" height="250">
+                    <br>图12 添加第一个元素
+                </div>
+            </section>
+            <section>
+                <h2>任意添加元素</h2>
+                <div>
+                    <img src="img/5/13.png" height="250">
+                    <br>图13 添加尾部元素
+                </div>
+            </section>
+            <section>
+                <h2>任意添加元素</h2>
+                <div>
+                    <img src="img/5/14.png" height="250">
+                    <br>图14 添加中间元素
+                </div>
+            </section>
+            <section>
+                <h2>任意添加元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+insert(element, index) {
+    if (index >= 0 && index <= this.count) {
+        const node = new DoublyNode(element);
+        let current = this.head;
+        if (index === 0) {  //添加第一个位置元素
+            if (this.head == null) {//链表为空 
+                this.head = node;
+                this.tail = node;
+            } else {//链表非空
+                node.next = this.head;
+                current.prev = node; 
+                this.head = node; 
+            }
+        } else if (index === this.count) { // 添加最后一项 
+            current = this.tail; 
+            current.next = node; 
+            node.prev = current; 
+            this.tail = node; 
+        } else {  //添加中间元素
+            const previous = this.getElementAt(index - 1); 
+            current = previous.next; 
+            node.next = current; 
+            previous.next = node; 
+            current.prev = node; 
+            node.prev = previous; 
+        }
+        this.count++;
+        return true;
+    }
+    return false;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>删除元素</h2>
+                <ul>
+                    <li>从特定位置移除一个元素</li>
+                    <li>三种情况：删除第一个位置，尾部，中间元素</li>
+                </ul>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <div>
+                    <img src="img/5/15.png" height="250">
+                    <br>图15 删除第一个元素
+                </div>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <div>
+                    <img src="img/5/16.png" height="250">
+                    <br>图16 删除尾部元素
+                </div>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <div>
+                    <img src="img/5/17.png" height="250">
+                    <br>图17 删除中间元素
+                </div>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+removeAt(index) {
+    if (index >= 0 && index < this.count) {
+        let current = this.head;
+        if (index === 0) {//第一个位置
+            this.head = current.next; 
+            // 如果只有一项，更新tail
+            if (this.count === 1) { 
+                this.tail = undefined;
+            } else {
+                this.head.prev = undefined; 
+            }
+        } else if (index === this.count - 1) { // 最后一项 
+            current = this.tail; 
+            this.tail = current.prev; 
+            this.tail.next = undefined; 
+        } else {//中间位置
+            current = this.getElementAt(index); 
+            const previous = current.prev; 
+            // 将previous 与current 的下一项链接起来——跳过current
+            previous.next = current.next;
+            current.next.prev = previous; 
+        }
+        this.count--;
+        return current.element;
+    }
+    return undefined;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>双向链表使用</h2>
+                <ul>
+                    <li>用new创建DoublyLinkedList对象</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+//创建双向链表
+let list = new DoublyLinkedList();
+//尾部添加
+list.insert(3,list.size());
+//头部添加
+list.insert(4,0);
+//任意位置添加
+list.insert(5,2);
+//删除元素
+list.remove(2);
+//删除第一个元素
+list.removeAt(0);
+//删除最后一个元素
+list.removeAt(list.size() - 1);
+</code></pre>
+            </section>
+
+
+            <section>
+                <h2>循环链表</h2>
+                <ul>
+                    <li>循环链表只有尾部指针或链接指向第一个节点</li>
+                </ul>
+                <img src='img/5/18.png'>
+            </section>
+
+            <section>
+                <h2>双向循环链表</h2>
+                <ul>
+                    <li>双向循环链表尾部节点next链接指向第一个节点</li>
+                    <li>双向循环链表第一个节点prev链接指向尾部节点</li>
+                </ul>
+                <img src='img/5/19.png'>
+            </section>
+            <section>
+                <h2>循环链表操作</h2>
+                <ul>
+                    <li>创建链表</li>
+                    <li>添加</li>
+                    <li>删除</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>创建循环链表</h2>
+                <ul>
+                    <li>循环链表继承链表</li>
+                    <li>重写insert,removeAt方法</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+//节点定义
+class CircularLinkedList extends LinkedList{
+    constructor(equalsFn = defaultEquals){
+        super(equalsFn);
+    }
+    insert(element, index){}
+    removeAt(index){}
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>添加元素</h2>
+                <ul>
+                    <li>在任意位置插入一个元素</li>
+                    <li>两种情况：链表为空添加第一个元素，链表非空第一个位置添加元素</li>
+                </ul>
+            </section>
+            <section>
+                <h2>添加元素</h2>
+                <div>
+                    <img src="img/5/20.png" height="250">
+                    <br>图20 链表为空添加第一个元素
+                </div>
+            </section>
+            <section>
+                <h2>添加元素</h2>
+                <div>
+                    <img src="img/5/21.png" height="250">
+                    <br>图20 链表非空添加第一个元素
+                </div>
+            </section>
+            <section>
+                <h2>添加元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+insert(element, index) {
+    if (index >= 0 && index <= this.count) {
+        const node = new Node(element);
+        let current = this.head;
+        if (index === 0) {
+            if (this.head == null) {
+                this.head = node; 
+                node.next = this.head; 
+            } else {
+                node.next = current;
+                current = this.getElementAt(this.size()); 
+                // 更新最后一个元素
+                this.head = node; 
+                current.next = this.head; 
+            }
+        } else { // 这种场景没有变化
+            const previous = this.getElementAt(index - 1);
+            node.next = previous.next;
+            previous.next = node;
+        }
+        this.count++;
+        return true;
+    }
+    return false;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>删除元素</h2>
+                <ul>
+                    <li>从特定位置移除一个元素</li>
+                    <li>两种情况：移除只有一个元素链表，移除长度大于1的链表第一个元素</li>
+                </ul>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <div>
+                    <img src="img/5/22.png" height="250">
+                    <br>图20 删除长度大于1的链表第一个元素
+                </div>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+removeAt(index) {
+    if (index >= 0 && index < this.count) {
+        let current = this.head;
+        if (index === 0) {
+            if (this.size() === 1) {
+                this.head = undefined;
+            } else {
+                const removed = this.head; 
+                current = this.getElementAt(this.size()); 
+                this.head = this.head.next; 
+                current.next = this.head; 
+                current = removed; 
+            }
+        } else {
+            // 不需要修改循环链表最后一个元素
+            const previous = this.getElementAt(index - 1);
+            current = previous.next;
+            previous.next = current.next;
+        }
+        this.count--;
+        return current.element; // {6}
+    }
+    return undefined;
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>任务</h2>
+                <h3>利用双向链表设计一种队列，随机入队1万个、10万个、50万个元素并出队，然后与基于数组的队列比较入队出队性能。</h3>
+            </section>
+        </div>
+    </div>
+
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info about config & dependencies:
+        // - https://github.com/hakimel/reveal.js#configuration
+        // - https://github.com/hakimel/reveal.js#dependencies
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            slideNumber: true,
+            math: {
+                mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                config: 'TeX-AMS_HTML-full', // See http://docs.mathjax.org/en/latest/config-files.html
+                // pass other options into `MathJax.Hub.Config()`
+                TeX: {
+                    Macros: {
+                        RR: "{\\bf R}"
+                    }
+                }
+            },
+            dependencies: [{
+                    src: 'plugin/markdown/marked.js'
+                },
+                {
+                    src: 'plugin/markdown/markdown.js'
+                },
+                {
+                    src: 'plugin/highlight/highlight.js'
+                },
+                {
+                    src: 'plugin/notes/notes.js',
+                    async: true
+                },
+                {
+                    src: 'plugin/math/math.js',
+                    async: true
+                }
+            ]
+        });
+    </script>
+</body>
+
+</html>

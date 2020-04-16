@@ -1,0 +1,848 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
+
+    <title>散列表HashMap</title>
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/sky.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css">
+
+    <script src="echarts.js"></script>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <dialog id="indialog">
+        <h2>输入对话框</h2><br>
+        <div id="inmessage"></div><br>
+        <input id="input" style="height:50px;font-size:50px;" size="10" value="">
+        <div>
+            <br>
+            <button id="okindialog">确定</button>
+            <button id="closeindialog">关闭</button>
+        </div>
+    </dialog>
+    <dialog id="outdialog">
+        <h2>输出对话框</h2><br>
+        <div id="outmessage"></div>
+        <div>
+            <br>
+            <button id="closeoutdialog">关闭</button>
+        </div>
+    </dialog>
+    <script>
+        let useragent = navigator.userAgent;
+        let inputEvent = new Event("inputComplete"); //自定义输入完成事件
+        document.getElementById("closeindialog").onclick = function() {
+            document.querySelector("#indialog").close();
+        };
+        document.getElementById("okindialog").onclick = function() {
+            document.querySelector("#indialog").close();
+            let input = document.getElementById("input");
+            input.dispatchEvent(inputEvent);
+        };
+        document.getElementById("closeoutdialog").onclick = function() {
+            document.querySelector("#outdialog").close();
+        };
+        //输入对话框
+        function inputDialog(s) {
+            if (useragent.indexOf("Chrome") > -1) {
+                let dialog = document.querySelector("#indialog");
+                let msg = document.getElementById("inmessage");
+                msg.innerHTML = `<font size="20">${s}</font>`;
+                document.getElementById("input").value = "";
+                dialog.showModal();
+            } else {
+                let input = prompt(s);
+                if (input != null) {
+                    let input1 = document.getElementById("input");
+                    input1.value = input;
+                    input1.dispatchEvent(inputEvent);
+                }
+            }
+        }
+        //输出对话框
+        function outputDialog(s) {
+            if (useragent.indexOf("Chrome") > -1) {
+                let dialog = document.querySelector("#outdialog");
+                let msg = document.getElementById("outmessage");
+                msg.innerHTML = `<font size="20">${s}</font>`;
+                dialog.showModal();
+            } else {
+                alert(s);
+            }
+        }
+    </script>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <h2>散列表(HashMap)</h2>
+                        <h3>李艳生</h3>
+                        <h3>湖北师范大学</h3>
+                        <h3>物理与电子科学学院</h3>
+                        <h3>2020年春季</h3>
+            </section>
+
+            <section>
+                <h2>回顾</h2>
+                <ul>
+                    <li>
+                        <font color="#ff0000">集合Set</font>:元素不重复,元素=值:值
+                    </li>
+                    <li>
+                        <font color="#ff0000">字典Map</font>:元素不重复,元素=键:值
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>引入</h2>
+                <h3>请大家思考在n个无序元素的数组中查找一个元素需要多少个操作？有没有更高性能查找的数据结构呢？</h3>
+            </section>
+
+            <section>
+                <h2>内容</h2>
+                <h3>散列表(重点)</h3>
+                <h3>散列冲突(重点)</h3>
+                <h3>散列函数</h3>
+                <h3>任务</h3>
+            </section>
+
+            <section>
+                <h2>查字典</h2>
+                <img src="img/8/1.jpg" height="400">
+            </section>
+            <section>
+                <h2>散列表</h2>
+                <img src="img/8/2.png" height="400">
+            </section>
+            <section>
+                <h2>散列表</h2>
+                <ul>
+                    <li>散列的作用是尽可能快地在数据结构中找到一个值</li>
+                    <li>数组查找值要通遍历数组查找值</li>
+                    <li>散列函数计算值的存储具体位置，从而快速找到值</li>
+                    <li>应用：数据库索引，对象存储</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>散列表操作</h2>
+                <ul>
+                    <li>创建</li>
+                    <li>查找</li>
+                    <li>添加</li>
+                    <li>删除</li>
+                    <li>转字符串</li>
+                </ul>
+            </section>
+            <section>
+                <h2>算法演示</h2>
+                <input type='button' style='font-size:5rem;' onclick='ex1()' value='添加元素'>
+                <input type='button' style='font-size:5rem;' onclick='ex2()' value='删除元素'>
+                <input type='button' style='font-size:5rem;' onclick='ex4()' value='查找元素'>
+                <input type='button' style='font-size:5rem;' onclick='ex3()' value='显示集合'>
+                <script>
+                    function defaultToString(item) {
+                        if (item === null) {
+                            return 'NULL';
+                        } else if (item === undefined) {
+                            return 'UNDEFINED';
+                        } else if (typeof item === 'string' || item instanceof String) {
+                            return `${item}`;
+                        }
+                        return item.toString();
+                    }
+                    class ValuePair {
+                        constructor(key, value) {
+                            this.key = key;
+                            this.value = value;
+                        }
+                        toString() {
+                            return `[#${this.key}: ${this.value}]`;
+                        }
+                    }
+                    class HashMap {
+                        constructor(toStrFn = defaultToString) {
+                            this.toStrFn = toStrFn; //转字符串方法
+                            this.table = {};
+                        }
+                        hashCode(key) {
+                            if (typeof key === 'number') {
+                                return key;
+                            }
+                            const tableKey = this.toStrFn(key);
+                            let hash = 0;
+                            for (let i = 0; i < tableKey.length; i++) {
+                                hash += tableKey.charCodeAt(i);
+                            }
+                            return hash % 37;
+                        }
+                        put(key, value) {
+                            if (key != null && value != null) {
+                                //const tableKey = this.toStrFn(key); 
+                                //this.table[tableKey] = new ValuePair(key, value); 
+                                const position = this.hashCode(key);
+                                this.table[position] = new ValuePair(key, value);
+                                return true;
+                            }
+                            return false;
+                        }
+                        remove(key) {
+                            const hash = this.hashCode(key);
+                            const valuePair = this.table[hash];
+                            if (valuePair != null) {
+                                delete this.table[hash];
+                                return true;
+                            }
+                            return false;
+                        }
+                        get(key) {
+                            //const valuePair = this.table[this.toStrFn(key)]; 
+                            const valuePair = this.table[this.hashCode(key)];
+                            return valuePair == null ? undefined : valuePair.value;
+                        }
+                        toString() {
+                            if (Object.keys(this.table).length === 0) {
+                                return '';
+                            }
+                            const keys = Object.keys(this.table);
+                            let objString = `{${keys[0]} => ${this.table[keys[0]].toString()}}`;
+                            for (let i = 1; i < keys.length; i++) {
+                                objString = `${objString},{${keys[i]} => ${this.table[keys[i]].toString()}}`;
+                            }
+                            return objString;
+                        }
+                    }
+
+                    let dict = new HashMap(); //定义字典
+
+                    function ex1() {
+                        inputDialog(`请输入要添加的散列元素，格式为(键:值)`);
+                        let input = document.getElementById("input");
+                        let proc = function() {
+                            if (input.value != null) {
+                                let a = input.value.split(':');
+                                dict.put(a[0], a[1]);
+                            }
+                            input.removeEventListener("inputComplete", proc);
+                        };
+                        input.addEventListener("inputComplete", proc);
+
+                        //let input = prompt('请输入要添加的集合元素：');
+                        //if (input != null) {
+                        //    set.add(input);
+                        //}
+                    }
+
+                    function ex2() {
+                        /*
+                        let input = prompt('请输入要删除的集合元素：');
+                        if (input != null) {
+                            dict.remove(input)
+                        }
+                        */
+                        inputDialog('请输入要删除的散列键：');
+                        let input = document.getElementById("input");
+                        let proc = function() {
+                            if (input.value != null) {
+                                dict.remove(input.value);
+                            }
+                            input.removeEventListener("inputComplete", proc);
+                        }
+                        input.addEventListener("inputComplete", proc)
+                    }
+
+                    function ex3() {
+                        outputDialog(`散列表为{${dict.toString()}}`);
+                        //alert(`集合为{${set.values().toString()}}`);
+                    }
+
+                    function ex4() {
+                        inputDialog('请输入要查找的散列键：');
+                        let input = document.getElementById("input");
+                        let proc = function() {
+                            if (input.value != null) {
+                                outputDialog(`查找字典值为：${dict.get(input.value)}`);
+                            }
+                            input.removeEventListener("inputComplete", proc);
+                        }
+                        input.addEventListener("inputComplete", proc)
+                    }
+                </script>
+            </section>
+            <section>
+                <h2>创建散列表</h2>
+                <ul>
+                    <li>可用数组[]实现</li>
+                    <li>也可用对象{}实现</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>创建散列表</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+class HashMap {
+    constructor(toStrFn = defaultToString) {
+        this.toStrFn = toStrFn;  //转字符串方法
+        this.table = {};
+    }
+    put(key,value){} //添加
+    remove(key){}    //移除
+    get(key){}       //查找
+    hashCode(key){}  //散列函数
+    toString(){}     //转字符串
+}
+function defaultToString(item) {
+    if (item === null) {
+        return 'NULL';
+    } else if (item === undefined) {
+        return 'UNDEFINED';
+    } else if (typeof item === 'string' || item instanceof String) {
+        return `${item}`;
+    }
+    return item.toString(); 
+}   
+    </code></pre>
+            </section>
+
+            <section>
+                <h2>散列函数</h2>
+                <ul>
+                    <li>不同的散列函数散列表性能不一样</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+hashCode(key) {
+    if (typeof key === 'number') { 
+        return key;
+    }
+    const tableKey = this.toStrFn(key);
+    let hash = 0;
+    for (let i = 0; i < tableKey.length; i++) {
+        hash += tableKey.charCodeAt(i);
+    }
+    return hash % 37;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>添加元素</h2>
+                <ul>
+                    <li>该方法接收key 和value 作为参数</li>
+                    <li>key计算散列函数值作为属性名</li>
+                    <li>为了保存原始键值数据，原始的key 和value同时作为属性值</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>添加元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+put(key, value) {
+    if (key != null && value != null) {
+        //const tableKey = this.toStrFn(key); 
+        //this.table[tableKey] = new ValuePair(key, value); 
+        const position = this.hashCode(key); 
+        this.table[position] = new ValuePair(key, value);
+        return true;
+    }
+    return false;
+}
+class ValuePair {
+    constructor(key, value) {
+        this.key = key;
+        this.value = value;
+    }
+    toString() {
+        return `[#${this.key}: ${this.value}]`;
+    }
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>删除元素</h2>
+                <ul>
+                    <li>要从HashMap 中移除一个值，计算散列函数找到值所在的位置</li>
+                    <li>如果存在，就从散列表中移除，返回true，表示元素被移除；否则返回false</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>删除元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+remove(key) {
+    const hash = this.hashCode(key);
+    const valuePair = this.table[hash];
+    if (valuePair != null) {
+        delete this.table[hash];
+        return true;
+    }
+    return false;
+}               
+</code></pre>
+            </section>
+            <section>
+                <h2>查找元素</h2>
+                <ul>
+                    <li>如果元素在散列表中，返回元素值，否则返回undefined。</li>
+                    <li>首先要计算散列函数用来查找某个元素</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+get(key) {
+    //const valuePair = this.table[this.toStrFn(key)]; 
+    const valuePair = this.table[this.hashCode(key)];
+    return valuePair == null ? undefined : valuePair.value; 
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>转字符串</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+toString() {
+    if (this.isEmpty()) {
+        return '';
+    }
+    const keys = Object.keys(this.table);
+    let objString = `{${keys[0]} => ${this.table[keys[0]].toString()}}`;
+    for (let i = 1; i < keys.length; i++) {
+    objString = `${objString},{${keys[i]} => ${this.table[keys[i]].toString()}}`;
+    }
+    return objString;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>散列表使用</h2>
+                <ul>
+                    <li>用new创建HashMap对象</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+const hash = new HashMap();
+hash.put('Gandalf', 'gandalf@email.com');
+hash.put('John', 'johnsnow@email.com');
+hash.put('Tyrion', 'tyrion@email.com');
+console.log(hash.hashCode('Gandalf') + ' - Gandalf'); //19 - Gandalf
+console.log(hash.hashCode('John') + ' - John'); //29 - John
+console.log(hash.hashCode('Tyrion') + ' - Tyrion');  //16 - Tyrion
+console.log(hash.get('Gandalf')); // gandalf@email.com
+console.log(hash.get('Loiane')); // undefined
+hash.remove('Gandalf');
+console.log(hash.get('Gandalf')); //undefined
+</code></pre>
+            </section>
+            <section>
+                <h2>散列表使用</h2>
+                <img src="img/8/3.png" height="400">
+            </section>
+
+            <section>
+                <h2>问题</h2>
+                <ul>
+                    <li>请大家发现下面代码有没有什么问题？</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+const hash = new HashMap();
+hash.put('Ygritte', 'ygritte@email.com');
+hash.put('Jonathan', 'jonathan@email.com');
+hash.put('Jamie', 'jamie@email.com');
+hash.put('Jack', 'jack@email.com');
+console.log(hash.hashCode('Ygritte') + ' - Ygritte');       //4 - Ygritte 
+console.log(hash.hashCode('Jonathan') + ' - Jonathan');     //5 - Jonathan 
+console.log(hash.hashCode('Jamie') + ' - Jamie');           //5 - Jamie 
+console.log(hash.hashCode('Jack') + ' - Jack');             //7 - Jack 
+</code></pre>
+            </section>
+            <section>
+                <h2>散列冲突</h2>
+                <ul>
+                    <li>一些键会有相同的散列代码</li>
+                    <li>不同的值在散列表中对应相同位置</li>
+                </ul>
+            </section>
+            <section>
+                <h2>处理冲突</h2>
+                <ul>
+
+                    <li>拉链法</li>
+                    <li>线性探测法</li>
+                    <li>二次探测法</li>
+                    <li>再散列法</li>
+                </ul>
+            </section>
+            <section>
+                <h2>拉链法</h2>
+                <ul>
+                    <li>为散列表的每一个位置创建一个链表并将元素存储在里面</li>
+                </ul>
+                <img src="img/8/4.png" height="400">
+            </section>
+            <section>
+                <h2>创建散列表</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+class HashMapWithChaining {
+    constructor(toStrFn = defaultToString) {
+        this.toStrFn = toStrFn;  //转字符串方法
+        this.table = {};
+    }
+    put(key,value){} //添加
+    remove(key){}    //移除
+    get(key){}       //查找
+    hashCode(key){}  //散列函数
+}
+function defaultToString(item) {
+    if (item === null) {
+        return 'NULL';
+    } else if (item === undefined) {
+        return 'UNDEFINED';
+    } else if (typeof item === 'string' || item instanceof String) {
+        return `${item}`;
+    }
+    return item.toString(); 
+}   
+    </code></pre>
+            </section>
+            <section>
+                <h2>添加元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+put(key, value) {
+    if (key != null && value != null) {
+        const position = this.hashCode(key); 
+        if (this.table[position] == null) {
+            this.table[position] = new LinkedList();
+        }
+        this.table[position].push(new ValuePair(key, value));
+        return true;
+    }
+    return false;
+}
+class ValuePair {
+    constructor(key, value) {
+        this.key = key;
+        this.value = value;
+    }
+    toString() {
+        return `[#${this.key}: ${this.value}]`;
+    }
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>查找元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+get(key) {
+    const position = this.hashCode(key);
+    const linkedList = this.table[position]; 
+    if (linkedList != null && !linkedList.isEmpty()) {
+    let current = linkedList.head; 
+    while (current != null) { 
+        if (current.element.key === key) { 
+            return current.element.value; 
+        }
+        current = current.next; 
+    }
+    }
+    return undefined; 
+}
+</code></pre>
+            </section>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+remove(key) {
+    const position = this.hashCode(key);
+    const linkedList = this.table[position];
+    if (linkedList != null && !linkedList.isEmpty()) {
+        let current = linkedList.head;
+        while (current != null) {
+            if (current.element.key === key) { 
+                linkedList.remove(current.element); 
+                if (linkedList.isEmpty()) { 
+                    delete this.table[position]; 
+                }
+                return true; 
+            }
+            current = current.next; 
+        }
+    }
+    return false;
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>线性探测法</h2>
+                <ul>
+                    <li>向表中某个位置添加一个新元素时，如果索引为position 的位置已经被占据，依次尝试position+1,position+2,...，直到找到空位置</li>
+                </ul>
+                <img src="img/8/5.png" height="400">
+            </section>
+            <section>
+                <h2>创建散列表</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+class HashMapWithLinear {
+    constructor(toStrFn = defaultToString) {
+        this.toStrFn = toStrFn;  //转字符串方法
+        this.table = {};
+    }
+    put(key,value){} //添加
+    remove(key){}    //移除
+    get(key){}       //查找
+    hashCode(key){}  //散列函数
+}
+function defaultToString(item) {
+    if (item === null) {
+        return 'NULL';
+    } else if (item === undefined) {
+        return 'UNDEFINED';
+    } else if (typeof item === 'string' || item instanceof String) {
+        return `${item}`;
+    }
+    return item.toString(); 
+}   
+    </code></pre>
+            </section>
+            <section>
+                <h2>添加元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+put(key, value) {
+    if (key != null && value != null) {
+        const position = this.hashCode(key);
+        if (this.table[position] == null) { 
+            this.table[position] = new ValuePair(key, value); 
+        } else {
+            let index = position + 1; 
+            while (this.table[index] != null) { 
+                index++; 
+            }
+            this.table[index] = new ValuePair(key, value); 
+        }
+        return true;
+    }
+    return false;
+}
+class ValuePair {
+    constructor(key, value) {
+        this.key = key;
+        this.value = value;
+    }
+    toString() {
+        return `[#${this.key}: ${this.value}]`;
+    }
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>查找元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+get(key) {
+    const position = this.hashCode(key);
+    if (this.table[position] != null) { 
+        if (this.table[position].key === key) { 
+            return this.table[position].value; 
+        }
+        let index = position + 1; 
+        while (this.table[index] != null && this.table[index].key !== key) { 
+            index++;
+        }
+        if (this.table[index] != null && this.table[index].key === key) { 
+            return this.table[position].value; 
+        }
+    }
+    return undefined; 
+}
+</code></pre>
+            </section>
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <img src="img/8/6.png" height="300"><br>软删除
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <img src="img/8/7.png" height="300"><br>硬删除
+            </section>
+            <section>
+                <h2>删除元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+remove(key) {
+    const position = this.hashCode(key);
+    if (this.table[position] != null) {
+        if (this.table[position].key === key) {
+            delete this.table[position]; 
+            this.verifyRemoveSideEffect(key, position); 
+            return true;
+        }
+        let index = position + 1;
+        while (this.table[index] != null && this.table[index].key !== key ) {
+            index++;
+        }
+        if (this.table[index] != null && this.table[index].key === key) {
+            delete this.table[index]; 
+            this.verifyRemoveSideEffect(key, index); 
+            return true;
+        }
+    }
+    return false;
+}
+verifyRemoveSideEffect(key, removedPosition) {
+    const hash = this.hashCode(key); 
+    let index = removedPosition + 1; 
+    while (this.table[index] != null) { 
+        const posHash = this.hashCode(this.table[index].key); 
+        if (posHash <= hash || posHash <= removedPosition) { 
+            this.table[removedPosition] = this.table[index];
+            delete this.table[index];
+            removedPosition = index;
+        }
+        index++;
+    }
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>散列函数</h2>
+                <ul>
+
+                    <li>直接定址法</li>
+                    <li>除留余数法</li>
+                    <li>随机数法</li>
+                </ul>
+            </section>
+            <section data-markdown>
+                ## 直接定址法
+
+                $$ hashCode(key) = key $$
+                $$ hashCode(key) = a * key + b $$
+            </section>
+            <section data-markdown>
+                ## 除留余数法
+
+                $$ hashCode(key) = key \\% p $$
+                (p<=m,m为散列表长) </section>
+                    <section data-markdown>
+                        ## 随机数法
+
+                        $$ hashCode(key) = random(key) $$
+                        (random为随机函数)
+                    </section>
+                    <section>
+                        <h2>散列函数</h2>
+                        <pre><code class='hljs' data-line-numbers=''>
+hashCode(key) {
+    const tableKey = this.toStrFn(key); 
+    let hash = 5381;
+    for (let i = 0; i < tableKey.length; i++) { 
+        hash = (hash * 33) + tableKey.charCodeAt(i); 
+    }
+    return hash % 1013;
+}
+</code></pre>
+                    </section>
+                    <section data-markdown>
+                        ## 装填因子
+
+                        $$ \alpha = \frac {表中填入的元数个数} {表长} $$
+                    </section>
+                    <section>
+                        <h2>性能</h2>
+                        <ul>
+
+                            <li>散列函数</li>
+                            <li>处理散列冲突方法</li>
+                            <li>装填因子</li>
+                        </ul>
+                    </section>
+                    <section data-markdown>
+                        ## 性能
+
+                        |散列冲突|查找成功|查找不成功|
+                        |:-------|:------:|:--------:|
+                        |线性探测法|$ \frac{1}{2}(1 + \frac{1}{1-\alpha}) $|$ \frac{1}{2}(1 + \frac{1}{(1-\alpha)^2}) $|
+                        |拉链法| $ 1+ \frac {\alpha}{2} $ | $ \alpha + e^{-\alpha} $ |
+                    </section>
+                    <section data-markdown>
+                        ## 比较
+
+                        #### 平均情况时间复杂度
+                        |数据结构|访问|查找|添加|删除|
+                        |:--|:--:|:--:|:--:|:--:|
+                        |数组|O(1)|O(n)|O(n)|O(n)|
+                        |链表|O(n)|O(n)|O(1)|O(1)|
+                        |散列表|N/A|O(1)|O(1)|O(1)|
+                    </section>
+                    <section data-markdown>
+                        ## 比较
+
+                        #### 最坏情况时间复杂度
+                        |数据结构|访问|查找|添加|删除|
+                        |:--|:--:|:--:|:--:|:--:|
+                        |数组|O(1)|O(n)|O(n)|O(n)|
+                        |链表|O(n)|O(n)|O(1)|O(1)|
+                        |散列表|N/A|O(n)|O(n)|O(n)|
+                    </section>
+                    <section>
+                        <h2>任务</h2>
+                        <h3>分别向数组和散列表中存放1至100000共10万个元素，比较两种数据结构查找99999的性能。</h3>
+                    </section>
+        </div>
+    </div>
+
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info about config & dependencies:
+        // - https://github.com/hakimel/reveal.js#configuration
+        // - https://github.com/hakimel/reveal.js#dependencies
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            slideNumber: true,
+            math: {
+                mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                config: 'TeX-AMS_HTML-full', // See http://docs.mathjax.org/en/latest/config-files.html
+                // pass other options into `MathJax.Hub.Config()`
+                TeX: {
+                    Macros: {
+                        RR: "{\\bf R}"
+                    }
+                }
+            },
+            dependencies: [{
+                    src: 'plugin/markdown/marked.js'
+                },
+                {
+                    src: 'plugin/markdown/markdown.js'
+                },
+                {
+                    src: 'plugin/highlight/highlight.js'
+                },
+                {
+                    src: 'plugin/notes/notes.js',
+                    async: true
+                },
+                {
+                    src: 'plugin/math/math.js',
+                    async: true
+                }
+            ]
+        });
+    </script>
+</body>
+
+</html>

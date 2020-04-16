@@ -1,0 +1,463 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
+
+    <title>递归(Recursion)</title>
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/sky.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css">
+
+    <script src="echarts.js"></script>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <dialog id="indialog">
+        <h2>输入对话框</h2><br>
+        <div id="inmessage"></div><br>
+        <input id="input" style="height:50px;font-size:50px;" size="10" value="">
+        <div>
+            <br>
+            <button id="okindialog">确定</button>
+            <button id="closeindialog">关闭</button>
+        </div>
+    </dialog>
+    <dialog id="outdialog">
+        <h2>输出对话框</h2><br>
+        <div id="outmessage"></div>
+        <div>
+            <br>
+            <button id="closeoutdialog">关闭</button>
+        </div>
+    </dialog>
+    <script>
+        let useragent = navigator.userAgent;
+        let inputEvent = new Event("inputComplete"); //自定义输入完成事件
+        document.getElementById("closeindialog").onclick = function() {
+            document.querySelector("#indialog").close();
+        };
+        document.getElementById("okindialog").onclick = function() {
+            document.querySelector("#indialog").close();
+            let input = document.getElementById("input");
+            input.dispatchEvent(inputEvent);
+        };
+        document.getElementById("closeoutdialog").onclick = function() {
+            document.querySelector("#outdialog").close();
+        };
+        //输入对话框
+        function inputDialog(s) {
+            if (useragent.indexOf("Chrome") > -1) {
+                let dialog = document.querySelector("#indialog");
+                let msg = document.getElementById("inmessage");
+                msg.innerHTML = `<font size="20">${s}</font>`;
+                document.getElementById("input").value = "";
+                dialog.showModal();
+            } else {
+                let input = prompt(s);
+                if (input != null) {
+                    let input1 = document.getElementById("input");
+                    input1.value = input;
+                    input1.dispatchEvent(inputEvent);
+                }
+            }
+        }
+        //输出对话框
+        function outputDialog(s) {
+            if (useragent.indexOf("Chrome") > -1) {
+                let dialog = document.querySelector("#outdialog");
+                let msg = document.getElementById("outmessage");
+                msg.innerHTML = `<font size="20">${s}</font>`;
+                dialog.showModal();
+            } else {
+                alert(s);
+            }
+        }
+    </script>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <h2>递归(Recursion)</h2>
+                        <h3>李艳生</h3>
+                        <h3>湖北师范大学</h3>
+                        <h3>物理与电子科学学院</h3>
+                        <h3>2020年春季</h3>
+            </section>
+
+            <section>
+                <h2>回顾</h2>
+                <ul>
+                    <li>
+                        <font color="#ff0000">循环(loop)</font>:满足条件时重复执行一段代码
+                    </li>
+                    <li>
+                        <font color="#ff0000">迭代(Iterate)</font>:按顺序访问线性结构中的每一项
+                    </li>
+                    <li>
+                        <font color="#ff0000">遍历(Traversal)</font>:按规则访问非线性结构中的每一项
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>引入</h2>
+                <h3>请大家思考要重复执行一段代码，除了循环，还有什么方法？</h3>
+            </section>
+
+            <section>
+                <h2>内容</h2>
+                <h3>递归定义(重点)</h3>
+                <h3>递归过程(重点)</h3>
+                <h3>递归性能</h3>
+                <h3>常见递归</h3>
+                <h3>任务</h3>
+            </section>
+
+            <section>
+                <h2>递归定义</h2>
+                <ul>
+                    <li>递归是将大问题转化成小问题，通过求解小问题反推求出大问题</li>
+                    <li>递归是一种函数自已调用自已的方法。</li>
+                    <li>递归是函数式编程的重要方法。</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+function recursiveFunction(someParam){
+    recursiveFunction(someParam);
+}
+    </code></pre>
+            </section>
+            <section>
+                <h2>递归定义</h2>
+                <ul>
+                    <li>递归包含递归调用和递归出口两部分。</li>
+                    <li>循环包含循环体和终止条件两部分。</li>
+                    <li>递归与循环可相互转化</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+function understandRecursion(doIunderstandRecursion) {
+    const recursionAnswer = confirm('Do you understand recursion?');
+    if (recursionAnswer === true) { // 递归出口，终止条件
+        return true;
+    }
+    understandRecursion(recursionAnswer); // 递归调用
+}
+    </code></pre>
+            </section>
+            <section data-markdown>
+            ## 递归过程
+
+            #### 以阶乘为例
+            $$ n! = n \times (n-1) \times (n-2) \times \cdots \times 2 \times 1$$
+
+            $$ fact(n) = n * fact(n-1) $$
+            </section>
+
+            <section>
+                <h2>递归过程</h2>
+                <ul>
+                    <li>用循环实现阶乘</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+function factorialIterative(number) {
+    if (number < 0) return undefined;//负数
+    let total = 1; // 0! = 1
+    for (let n = number; n > 1; n--) {
+        total = total * n;
+    }
+    return total;
+}
+console.log(factorialIterative(5)); // 120
+    </code></pre>
+            </section>
+            <section>
+                <h2>递归过程</h2>
+                <ul>
+                    <li>用递归实现阶乘</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+function fact(n) {
+    if (n === 1 || n === 0) { // 终止条件
+        return 1;
+    }
+    return n * fact(n - 1); // 递归调用
+}
+console.log(fact(5)); // 120
+                </code></pre>
+            </section>
+            <section>
+                <h2>递归过程</h2>
+                <img src="img/9/recursion.svg" height="550">
+            </section>
+            <section>
+                <h2>递归过程</h2>
+                <ul>
+                    <li>JavaScript 调用栈大小的限制</li>
+                    <li>栈溢出错误（stack overflow error）</li>
+                    <li>尾调用优化（tail call optimization）</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+let i = 0;
+function recursiveFn() {
+    i++;
+    recursiveFn();
+}
+try {
+    recursiveFn();
+} catch (ex) {
+    console.log('i = ' + i + ' error: ' + ex);
+}
+                </code></pre>
+            </section>
+            <section>
+                <h2>递归性能</h2>
+
+                <ul>
+                    <li>斐波那契数列</li>
+                </ul>
+                <br>
+                <img src="img/9/3.png" width="400" height="320">
+                <img src="img/9/4.svg" width="400" height="320">
+            </section>
+            <section data-markdown>
+            ## 递归性能
+
+            #### 以斐波那契数列为例
+            $$ 0,1,1,2,3,5,8,13,21,34,\cdots$$
+
+$$ f(n)=
+\begin{cases}
+0,n=0 \\\\
+1,n=1 \\\\
+fib(n-1) + fib(n-2),n>1
+\end{cases}
+$$
+            </section>
+            <section>
+                <h2>递归性能</h2>
+                <ul>
+                    <li>用循环实现斐波那契数列</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+function fibLoop(n) {
+    if (n === 0) return 0;
+    if (n === 1) return 1;
+    let fibNMinus2 = 0;
+    let fibNMinus1 = 1;
+    let fibN = n;
+    for (let i = 2; i <= n; i++) { // n >= 2
+        fibN = fibNMinus1 + fibNMinus2; // f(n-1) + f(n-2)
+        fibNMinus2 = fibNMinus1;
+        fibNMinus1 = fibN;
+    }
+    return fibN;
+}
+console.time();
+console.log(fibLoop(40));
+console.timeEnd();
+    </code></pre>
+            </section>
+            <section>
+                <h2>递归性能</h2>
+                <ul>
+                    <li>用递归实现斐波那契数列</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+function fib(n){
+    if (n === 0) return 0;
+    if (n === 1) return 1;
+    return fib(n - 1) + fib(n - 2);
+}
+console.time();
+console.log(fib(40));
+console.timeEnd();
+                </code></pre>
+            </section>
+            <section>
+                <h2>递归性能</h2>
+                <ul>
+                    <li>记忆优化递归</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+function fibonacciMemoization(n) {
+    const memo = [0, 1];
+    const fibonacci = (n) => {
+        if (memo[n] != null) return memo[n]; 
+        return memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo); 
+    };
+    return fibonacci;
+}
+console.time();
+let f = fibonacciMemoization(40);
+console.log(f(40));
+console.timeEnd();
+                </code></pre>
+            </section>
+            <section data-markdown>
+                ## 递归性能
+
+|算法|时间|执行效率|理解难度|
+|:--:|----|----|---|
+|循环|0.24096ms|最好|最难
+|递归|1315.6601ms|最差|最容易
+|记忆递归|0.29907ms|较好|较容易
+
+            </section>
+            <section>
+                <h2>常见递归</h2>
+                <ul>
+                    <li>数组查找</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+const search = (arr, key) => {
+    if (arr.length === 0) {
+        return false;
+    } else if (arr[0] === key) {
+        return true;
+    } else {
+        return search(arr.slice(1), key);
+    }
+};
+                </code></pre>
+            </section>
+            <section data-markdown>
+                ## 常见递归
+                
+                #### 汉诺塔
+                ![hanoi](img/9/1.png)
+
+                #### $ f(n) = 2^n - 1 $, $ f(3) = 2^{3} - 1 = 7 $
+            </section>
+            <section>
+                <h2>常见递归</h2>
+                <ul>
+                    <li>汉诺塔</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+const hanoi = (disks, from, to, extra) => {
+    if (disks > 0) {
+        hanoi(disks - 1, from, extra, to);
+        console.log(`Move disk ${disks} from post ${from} to post ${to}`);
+        hanoi(disks - 1, extra, to, from);
+    }
+};
+                </code></pre>
+            </section>
+            <section>
+                <h2>常见递归</h2>
+                <ul>
+                    <li>快速排序</li>
+                </ul>
+                <br><img src="img/9/2.png">
+            </section>
+            <section>
+                <h2>常见递归</h2>
+                <ul>
+                    <li>快速排序</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+const quicksort = arr => {
+    if (arr.length < 2) {
+        return arr;
+    } else {
+        const pivot = arr[0];
+        const smaller = arr.slice(1).filter(x => x < pivot);
+        const greaterEqual = arr.slice(1).filter(x => x >= pivot);
+        return [...quicksort(smaller), pivot, ...quicksort(greaterEqual)];
+    }
+};
+console.log(quicksort([22, 9, 60, 12, 4, 56]));
+                </code></pre>
+            </section>
+            <section>
+                <h2>常见递归</h2>
+                <ul>
+                    <li>遍历DOM</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+const traverseDom = (node, depth = 0) => {
+    console.log(`${"| ".repeat(depth)}<${node.nodeName.toLowerCase()}>`);
+    for (let i = 0; i < node.children.length; i++) {
+        traverseDom(node.children[i], depth + 1);
+    }
+};
+traverseDom(document.body);
+                </code></pre>
+            </section>
+            <section>
+                <h2>常见递归</h2>
+                <ul>
+                    <li>遍历DOM</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+const traverseDom2 = (node, depth = 0) => {
+    console.log(`${"| ".repeat(depth)}<${node.nodeName.toLowerCase()}>`);
+    Array.from(node.children).forEach(child =>
+        traverseDom2(child, depth + 1)
+    );
+};
+traverseDom2(document.body);
+                </code></pre>
+            </section>
+                    <section>
+                        <h2>任务</h2>
+                        <h3>在nodejs上用递归方式遍历一个给定的文件夹。</h3>
+                    </section>
+        </div>
+    </div>
+
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info about config & dependencies:
+        // - https://github.com/hakimel/reveal.js#configuration
+        // - https://github.com/hakimel/reveal.js#dependencies
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            slideNumber: true,
+            math: {
+                mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                config: 'TeX-AMS_HTML-full', // See http://docs.mathjax.org/en/latest/config-files.html
+                // pass other options into `MathJax.Hub.Config()`
+                TeX: {
+                    Macros: {
+                        RR: "{\\bf R}"
+                    }
+                }
+            },
+            dependencies: [{
+                    src: 'plugin/markdown/marked.js'
+                },
+                {
+                    src: 'plugin/markdown/markdown.js'
+                },
+                {
+                    src: 'plugin/highlight/highlight.js'
+                },
+                {
+                    src: 'plugin/notes/notes.js',
+                    async: true
+                },
+                {
+                    src: 'plugin/math/math.js',
+                    async: true
+                }
+            ]
+        });
+    </script>
+</body>
+
+</html>

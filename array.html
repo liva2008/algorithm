@@ -1,0 +1,703 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
+
+		<title>Array</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+<section>
+    <h1>数组(Array)</h1>
+    <h3>李艳生</h3>
+    <h3>湖北师范大学</h3>
+    <h3>物理与电子科学学院</h3>
+    <h3>2020年春季</h3>
+</section>
+
+
+<section>
+    <h2>参考文献</h2>
+    <h3>JavaScript.info</h3>
+</section>
+<section>
+<h2>数组概念</h2>
+<ul>
+    <li>一组数据的有序集合</li>
+    <li>每个元素都有一个数字下标</li>
+    <li>数组元素的下标从0开始</li>
+    <li>最简单的内存数据结构</li>
+</ul>
+</section>
+
+<section>
+<h2>数组操作</h2>
+<ul>
+    <li>数组创建</li>
+    <li>数组访问</li>
+    <li>数组遍历</li>
+    <li>数组增删</li>
+    <li>数组截取</li>
+    <li>数组合并</li>
+    <li>数组排序</li>
+    <li>数组搜索</li>
+    <li>数组检查</li>
+    <li>MapReduce</li>
+    <li>数组转换</li>
+</ul>
+</section>
+
+<section>
+<h2>数组创建</h2>
+<ul>
+    <li>new Array()</li>
+    <li>数组常量[]</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建空数组
+let a1 = new Array();
+let a2 = [];
+
+// 创建并初始化数组
+let a3 = new Array(1,2,3,4,5);
+let a4 = [1,2,3,4,5];
+</code></pre>
+</section>
+
+<section>
+<h2>数组元素访问</h2>
+<ul>
+    <li>数组下标从0开始</li>
+    <li>数组元素用下标访问</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a3 = new Array(1,2,3,4,5);
+let a4 = [1,2,3,4,5];
+//数组访问
+console.log(a3[0]);
+console.log(a4[0]);
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex1()' value='运行'>
+<div id='ex1' style='font-size:6rem;'></div>
+<script>
+    function ex1(){
+        let res = document.getElementById('ex1');
+
+        // 创建并初始化数组
+        let a3 = new Array(1,2,3,4,5);
+        let a4 = [1,2,3,4,5];
+        res.innerHTML = `${a3[0]}<br>${a4[0]}`;
+    }
+</script>
+</section>
+
+<section>
+<h2>数组传统遍历</h2>
+<ul>
+    <li>数组下标从0开始</li>
+    <li>传统遍历利用length属性</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a3 = new Array(1,2,3,4,5);
+let a4 = [1,2,3,4,5];
+//数组遍历
+for(let i = 0; i < a3.length; i++){
+    console.log(a3[i]);
+}
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex2()' value='运行'>
+<div id='ex2' style='font-size:6rem;'></div>
+<script>
+    function ex2(){
+        let res = document.getElementById('ex2');
+
+        // 创建并初始化数组
+        let a3 = new Array(1,2,3,4,5);
+        let a4 = [1,2,3,4,5];
+        //数组遍历
+        for(let i = 0; i < a3.length; i++){
+            res.innerHTML += `${a3[i]},`;
+        }
+    }
+</script>
+</section>
+
+
+<section>
+<h2>数组迭代遍历</h2>
+<ul>
+    <li>迭代遍历for...of...</li>
+    <li>迭代遍历只能访问元素，不能访问下标</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a4 = [1,2,3,4,5];
+//数组遍历
+for(let n of a4){
+    console.log(n);
+}
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex3()' value='运行'>
+<div id='ex3' style='font-size:6rem;'></div>
+<script>
+    function ex3(){
+        let res = document.getElementById('ex3');
+
+        // 创建并初始化数组
+        let a4 = [1,2,3,4,5];
+        //数组遍历
+        for(let n of a4){
+            res.innerHTML += `${n},`;
+        }
+    }
+</script>
+</section>
+
+
+<section>
+<h2>数组forEach遍历</h2>
+<ul>
+    <li>arr.forEach(function(item, index, array){})</li>
+    <li>对arr数组每个元素执行函数</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a4 = [1,2,3,4,5];
+//数组遍历
+a4.forEach(function(item, index, array){
+    console.log(item)
+})
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex9()' value='运行'>
+<div id='ex9' style='font-size:6rem;'></div>
+<script>
+    function ex9(){
+        let res = document.getElementById('ex9');
+
+        // 创建并初始化数组
+        let a4 = [1,2,3,4,5];
+
+        //数组遍历
+        a4.forEach(function(item, index, array){
+            res.innerHTML += `${item},`;
+        });
+    }
+</script>
+</section>
+<section>
+<h2>数组尾部增删元素</h2>
+<ul>
+    <li>push(...items)在尾部添加元素</li>
+    <li>pop在尾部删除元素</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a4 = [1,2,3,4,5];
+//在尾部删除元素
+console.log(a4.pop());
+//在尾部插入元素
+a4.push(6,7);
+//数组遍历
+for(let n of a4){
+    console.log(n);
+}
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex4()' value='运行'>
+<div id='ex4' style='font-size:6rem;'></div>
+<script>
+    function ex4(){
+        let res = document.getElementById('ex4');
+
+        // 创建并初始化数组
+        let a4 = [1,2,3,4,5];
+        //在尾部删除元素
+        res.innerHTML = a4.pop()+'<br>';
+        //在尾部插入元素
+        a4.push(6,7);
+        //数组遍历
+        for(let n of a4){
+            res.innerHTML += `${n},`;
+        }
+    }
+</script>
+</section>
+
+
+<section>
+<h2>数组头部增删元素</h2>
+<ul>
+    <li>unshift(...items)头部添加元素</li>
+    <li>shift尾部删除元素</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a4 = [1,2,3,4,5];
+//在头部删除元素
+console.log(a4.shift());
+//在尾部插入元素
+a4.unshift(6,7);
+//数组遍历
+for(let n of a4){
+    console.log(n);
+}
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex5()' value='运行'>
+<div id='ex5' style='font-size:6rem;'></div>
+<script>
+    function ex5(){
+        let res = document.getElementById('ex5');
+
+        // 创建并初始化数组
+        let a4 = [1,2,3,4,5];
+        //在尾部删除元素
+        res.innerHTML = a4.shift()+'<br>';
+        //在尾部插入元素
+        a4.unshift(6,7);
+        //数组遍历
+        for(let n of a4){
+            res.innerHTML += `${n},`;
+        }
+    }
+</script>
+</section>
+
+
+<section>
+<h2>任意位置增删元素</h2>
+<ul>
+    <li>splice(index[,deleteCount,elem1,...,elemn])</li>
+    <li>从数组下标index开始</li>
+    <li>删除deleteCount个元素</li>
+    <li>并在当前位置插入elem1,...,elemn元素</li>
+    <li>返回已删除元素数组</li>
+</ul>
+</section>
+
+
+<section>
+<h2>任意位置增删元素</h2>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a4 = [1,2,3,4,5];
+let removed = a4.splice(1,2,6,7,8);
+//数组遍历
+for(let n of a4){
+    console.log(n);
+}
+for(let m of removed){
+    console.log(m)
+}
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex6()' value='运行'>
+<div id='ex6' style='font-size:6rem;'></div>
+<script>
+    function ex6(){
+        let res = document.getElementById('ex6');
+
+        // 创建并初始化数组
+        let a4 = [1,2,3,4,5];
+
+        let removed = a4.splice(1,2,6,7,8);
+        //数组遍历
+        for(let n of a4){
+            res.innerHTML += `${n},`;
+        }
+        res.innerHTML += '<br>';
+        for(let m of removed){
+            res.innerHTML += `${m},`
+        }
+    }
+</script>
+</section>
+
+
+<section>
+<h2>数组截取</h2>
+<ul>
+    <li>slice(index[,end])</li>
+    <li>从数组下标index开始</li>
+    <li>截取到下标end之前元素</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a4 = [1,2,3,4,5];
+let sliced = a4.slice(1,3);
+//数组遍历
+for(let n of a4){
+    console.log(n);
+}
+for(let m of sliced){
+    console.log(m)
+}
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex7()' value='运行'>
+<div id='ex7' style='font-size:6rem;'></div>
+<script>
+    function ex7(){
+        let res = document.getElementById('ex7');
+
+        // 创建并初始化数组
+        let a4 = [1,2,3,4,5];
+
+        let sliced = a4.slice(1,3);
+        //数组遍历
+        for(let n of a4){
+            res.innerHTML += `${n},`;
+        }
+        res.innerHTML += '<br>';
+        for(let m of sliced){
+            res.innerHTML += `${m},`
+        }
+    }
+</script>
+</section>
+
+
+<section>
+<h2>数组合并</h2>
+<ul>
+    <li>arr.concat(arg1, ...arg2)</li>
+    <li>合并arr,arg1,arg2i一个新数组</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a4 = [1,2,3,4,5];
+let a5 = a4.concat([6,7],[8,9]);
+//数组遍历
+for(let n of a4){
+    console.log(n);
+}
+for(let m of a5){
+    console.log(m)
+}
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex8()' value='运行'>
+<div id='ex8' style='font-size:6rem;'></div>
+<script>
+    function ex8(){
+        let res = document.getElementById('ex8');
+
+        // 创建并初始化数组
+        let a4 = [1,2,3,4,5];
+
+        let a5 = a4.concat([6,7],[8,9]);
+        //数组遍历
+        for(let n of a4){
+            res.innerHTML += `${n},`;
+        }
+        res.innerHTML += '<br>';
+        for(let m of a5){
+            res.innerHTML += `${m},`
+        }
+    }
+</script>
+
+</section>
+
+
+
+
+<section>
+<h2>数组排序</h2>
+<ul>
+    <li>sort方法默认按字母顺序排序</li>
+    <li>可自定义排序</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a4 = [1,15,2];
+a4.sort();
+//数组遍历
+a4.forEach(function(item, index, array){
+    console.log(item)
+})
+a4.sort(function(a,b){return a-b;});
+a4.forEach(function(item, index, array){
+    console.log(item)
+})
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex10()' value='运行'>
+<div id='ex10' style='font-size:6rem;'></div>
+<script>
+    function ex10(){
+        let res = document.getElementById('ex10');
+
+        // 创建并初始化数组
+        let a4 = [1,15,2];
+        a4.sort();
+
+        //数组遍历
+        a4.forEach(function(item, index, array){
+            res.innerHTML += `${item},`;
+        });
+        res.innerHTML += '<br>';
+
+        a4.sort(function(a,b){return a-b;});
+        a4.forEach(function(item, index, array){
+            res.innerHTML += `${item},`;
+        });
+    }
+</script>
+</section>
+
+
+<section>
+<h2>数组搜索</h2>
+<ul>
+    <li>indexOf返回第一个找到元素下标,lastIndexOf</li>
+    <li>find返回第一个找到的元素,findIndex</li>
+    <li>includes找到返回true</li>
+    <li>filter返回所有元素</li>
+</ul>
+</section>
+
+
+<section>
+<h2>数组搜索</h2>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a4 = [1,15,2,15];
+console.log(a4.indexOf(15));
+console.log(a4.lastIndexOf(15));
+console.log(a4.indexOf(50));
+let r1 = a4.find(function(item, index, array){
+    return item == 15;
+});
+console.log(r1);
+let r2 = a4.findIndex(function(item, index, array){
+    return item == 15;
+});
+console.log(r2);
+let r3 = a4.filter(function(item, index, array){
+    return item == 15;
+});
+console.log(r3);
+console.log(a4.includes(15));
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex11()' value='运行'>
+<div id='ex11' style='font-size:6rem;'></div>
+<script>
+    function ex11(){
+        let res = document.getElementById('ex11');
+
+        // 创建并初始化数组
+        let a4 = [1,15,2,15];
+        
+        res.innerHTML = `${a4.indexOf(15)},`
+        res.innerHTML += `${a4.lastIndexOf(15)},`
+        res.innerHTML += `${a4.indexOf(50)},`
+        let r1 = a4.find(function(item, index, array){
+            return item == 15;
+        });
+        res.innerHTML += `${r1},`
+        let r2 = a4.findIndex(function(item, index, array){
+            return item == 15;
+        });
+        res.innerHTML += `${r2},`
+        let r3 = a4.filter(function(item, index, array){
+            return item == 15;
+        });
+        res.innerHTML += `${r3},`
+        res.innerHTML += `${a4.includes(15)},`
+    }
+</script>
+</section>
+<section>
+<h2>数组检查</h2>
+<ul>
+    <li>arr.every(fn)所有满足条件返回true,否则返回false</li>
+    <li>arr.some(fn)只要一个满足返回true,否则返回false</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a4 = [1,2,3,4,5];
+let r1 = a4.every(x=>x%2==0);
+console.log(r1);
+let r2 = a4.some(x=>x%2==0);
+console.log(r2);
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex12()' value='运行'>
+<div id='ex12' style='font-size:6rem;'></div>
+<script>
+    function ex12(){
+        let res = document.getElementById('ex12');
+
+        // 创建并初始化数组
+        let a4 = [1,2,3,4,5];
+        let r1 = a4.every(x=>x%2==0);
+        res.innerHTML = `${r1},`;
+        let r2 = a4.some(x=>x%2==0);
+        res.innerHTML += `${r2},`;
+    }
+</script>
+</section>
+<section>
+<h2>mapreduce</h2>
+<ul>
+    <li>arr.map(fn)每个元素执行fn,返回结果新数组</li>
+    <li>arr.reduce(fn,init)每个元素执行fn,每次调用返回中间结果</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+// 创建并初始化数组
+let a4 = [1,2,3,4,5];
+let r1 = a4.map(x=>x*2);
+for(let n of r1){
+    console.log(n);
+}
+
+let r2 = a4.reduce((sum, current)=>sum + current,0);
+console.log(r2);
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex13()' value='运行'>
+<div id='ex13' style='font-size:6rem;'></div>
+<script>
+    function ex13(){
+        let res = document.getElementById('ex13');
+
+        // 创建并初始化数组
+        let a4 = [1,2,3,4,5];
+        let r1 = a4.map(x=>x*2);
+        for(let n of r1){
+            res.innerHTML += `${n},`
+        }
+         
+        let r2 = a4.reduce((sum, current)=>sum + current,0);
+        res.innerHTML += `<br>${r2}`
+    }
+</script>
+</section>
+<section>
+<h2>数组转换</h2>
+<ul>
+    <li>str.split(delim)用delim分隔符切分字符串str成数组</li>
+    <li>arr.join(delim)用delim把arr连接成字符串</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+let str = '1,2,3,4,5';
+let a1 = str.split('\\,');
+for(let n of a1){
+    console.log(n);
+}
+// 创建并初始化数组
+let a4 = [1,2,3,4,5];
+let r1 = a4.join('-');
+console.log(r1);
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex14()' value='运行'>
+<div id='ex14' style='font-size:6rem;'></div>
+<script>
+    function ex14(){
+        let res = document.getElementById('ex14');
+        let str = '1,2,3,4,5';
+        let a1 = str.split('\\,');
+        for(let n of a1){
+            res.innerHTML = `${n},`;
+        }
+        // 创建并初始化数组
+        let a4 = [1,2,3,4,5];
+        let r1 = a4.join('-');
+        res.innerHTML += `<br>${r1}`;
+    }
+</script>
+</section>
+<section>
+<h2>多维数组</h2>
+<ul>
+    <li>数组元素还是数组构成多维数组</li>
+    <li>数组的数组，数组嵌套</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+let a2 = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
+alert(a2[1][1]);
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex15()' value='运行'>
+<div id='ex15' style='font-size:6rem;'></div>
+<script>
+    function ex15(){
+        let res = document.getElementById('ex15');
+        let a2 = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+        ];
+        alert(a2[1][1]);
+    }
+</script>
+</section>
+<section>
+<h2>任务</h2>
+<h3>随机创建某个班某门课程100人成绩，1.计算平均成绩，2.统计优良中合格不合格人数，3.按从高分到低分排名。</h3>
+</section>
+<section>
+<input onclick='push1()' type='button' value='入栈'>
+<canvas border='3px' id='mycvs1' width='640' height='480'>
+</canvas>
+<script>
+    function push1(){
+        let mycanvas = document.getElementById('mycvs1');
+        let mycontext = mycanvas.getContext('2d');
+
+        mycontext.fillStyle = '#ff0000';
+        mycontext.fillRect(0, 0, 100, 100);
+    }
+</script>
+</section>
+<section>
+    <input onclick='push2()' style='font-size:3rem' type='button' value='入栈'><br>
+<canvas border='3px' id='mycvs2' width='800' height='600'>
+</canvas>
+<script>
+    function push2(){
+        let mycanvas = document.getElementById('mycvs2');
+        let mycontext = mycanvas.getContext('2d');
+
+        mycontext.fillStyle = '#ff0000';
+        mycontext.fillRect(0, 0, 800, 600);
+    }
+</script>
+</section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/highlight/highlight.js' },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>

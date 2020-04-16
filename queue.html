@@ -1,0 +1,1158 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
+
+		<title>Queue</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/league.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+        <script src="http://flowchart.js.org/flowchart-latest.js"></script>
+        <script src="echarts.js"></script>
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+<section>
+    <h1>队列(Queue)</h1>
+    <h3>李艳生</h3>
+    <h3>湖北师范大学</h3>
+    <h3>物理与电子科学学院</h3>
+    <h3>2020年春季</h3>
+</section>
+
+
+<section>
+    <h2>目录</h2>
+    <h3>队列</h3>
+    <h3>双端队列</h3>
+    <h3>回文问题</h3>
+</section>
+
+<section>
+    <h2>队列</h2>
+    <div>
+        <img src="img/4/1.png" height="250">
+        <br>图1 排队
+    </div>
+</section>
+
+<section>
+<h2>队列概念</h2>
+<ul>
+    <li>一组遵守先进先出(FIFO)的有序集合</li>
+    <li>一个队列包含队头，队尾</li>
+    <li>添加在队尾，删除在队头</li>
+    <li>新元素在队尾，旧元素在队头</li>
+    <li>生活实例:排队</li>
+    <li>计算机实例:文档打印队列</li>
+</ul>
+</section>
+
+<section>
+<h2>队列操作</h2>
+<ul>
+    <li>建队列</li>
+    <li>入队</li>
+    <li>出队</li>
+    <li>查看队头</li>
+    <li>检查队空</li>
+    <li>清空队列</li>
+</ul>
+</section>
+
+<section>
+<h2>算法演示</h2>
+<input onclick='push2()' style='font-size:3rem' type='button' value='入队'>
+<input onclick='pop2()' style='font-size:3rem' type='button' value='出队'><br>
+<canvas border='3px' id='mycvs2' width='800' height='600'>
+</canvas>
+<script>
+class Queue{
+    constructor(){
+        this.items = [];
+    }
+    enqueue(element){
+        this.items.push(element);
+    }
+    dequeue(){
+        return this.items.shift();
+    }
+    peek(){
+        return this.items[0];        
+    }
+    isEmpty(){
+        return this.items.length === 0;
+    }
+    clear(){
+        this.items = [];
+    }
+}
+let mycanvas = document.getElementById('mycvs2');
+let mycontext = mycanvas.getContext('2d');
+let queue = new Queue();
+let temp = [];
+let op = 0;
+function push2(){
+    let input = prompt('请输入入队数据');
+    if(input != null){
+        queue.enqueue(input);
+        temp.push(input);
+        mycontext.font = '50px Georgia';
+        mycontext.fillStyle = '#ffffff';
+        mycontext.fillText('入', 10 , 50+op * 80);
+        for(let i = 0; i < temp.length; i++){
+            mycontext.fillStyle = '#ff0000';
+            mycontext.strokeStyle = '#0000ff';
+            mycontext.lineWidth = 5;
+            mycontext.fillRect(70 + i*100, op * 80,100, 70);
+            mycontext.strokeRect(70 + i*100, op * 80,100, 70);
+            mycontext.font = '50px Georgia';
+            mycontext.fillStyle = '#ffffff';
+            mycontext.fillText(temp[i], 70 + i * 110, 50+op* 80);
+        }
+        op++;   
+    }
+}
+
+function pop2(){
+    let ret = queue.dequeue();
+    temp.shift();
+    mycontext.font = '50px Georgia';
+    mycontext.fillStyle = '#ffffff';
+    mycontext.fillText('出', 10 , 50+op * 80);
+    for(let i = 0; i < temp.length; i++){
+        mycontext.fillStyle = '#ff0000';
+        mycontext.strokeStyle = '#0000ff';
+        mycontext.lineWidth = 5;
+        mycontext.fillRect(70 + i*100, op * 80,100, 70);
+        mycontext.strokeRect(70 + i*100, op * 80,100, 70);
+        mycontext.font = '50px Georgia';
+        mycontext.fillStyle = '#ffffff';
+        mycontext.fillText(temp[i], 70 + i * 110, 50+op* 80);
+    }
+    op++; 
+    alert(`出队数据:${ret}`);
+}
+</script>
+</section>
+<section>
+<h2>队列实现</h2>
+<ul>
+    <li>基于数组的队列</li>
+    <li>基于对象的队列</li>
+</ul>
+</section>
+
+<section>
+<h2>数组队列</h2>
+<ul>
+    <li>创建一个类封装队列</li>
+    <li>利用数组操作实现队列操作</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+class Queue{
+    constructor(){
+        this.items = [];
+    }
+    enqueue(element){}
+    dequeque(){}
+    peek(){}
+    isEmpty(){}
+    clear(){}
+}
+</code></pre>
+</section>
+
+<section>
+<h2>入队</h2>
+<ul>
+    <li>入队只能在队列添加元素</li>
+    <li>利用数组push操作实现入队</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+enqueue(element){
+    this.items.push(element);
+}
+</code></pre>
+</section>
+<section>
+<h2>出队</h2>
+<ul>
+    <li>出队只能在队头删除元素</li>
+    <li>利用数组shift操作实现出队</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+dequeue(){
+    return this.items.shift();
+}
+</code></pre>
+</section>
+<section>
+<h2>查看队头元素</h2>
+<ul>
+    <li>查看队头只获取队头元素,不删除</li>
+    <li>利用数组第一个元素</li>
+
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+peek(){
+    return this.items[0];
+}
+
+</code></pre>
+</section>
+<section>
+<h2>检查队空</h2>
+<ul>
+    <li>队空返回true,不空返回false</li>
+    <li>利用数组length属性</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+
+isEmpty(){
+    return this.items.length === 0;
+}
+</code></pre>
+</section>
+<section>
+<h2>清空队列</h2>
+<ul>
+    <li>将队列中所有元素清空</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+clear(){
+    this.items = [];
+}
+</code></pre>
+</section>
+
+<section>
+<h2>队列使用</h2>
+<ul>
+    <li>利用new创建队列对象</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+//建队列
+let queue = new Queue();
+//判队空
+console.log(queue.isEmpty());
+//入队
+queue.enqueue(1);
+queue.enqueue(2);
+//查看队头
+console.log(queue.peek());
+//出队
+console.log(queue.dequeue());
+//清空队列
+queue.clear();
+console.log(queue.isEmpty());
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex2()' value='运行'>
+<div id='ex2' style='font-size:6rem;'></div>
+<script>
+
+function ex2(){
+    let res = document.getElementById('ex2');
+
+    //建栈
+    let queue = new Queue();
+    //判栈空
+    //console.log(queue.isEmpty());
+    res.innerHTML = `${queue.isEmpty()},`
+
+    //进栈
+    queue.enqueue(1);
+    queue.enqueue(2);
+    //查看栈顶
+    //console.log(queue.peek());
+    res.innerHTML += `${queue.peek()},`
+    //出栈
+    //console.log(stack.pop());
+    res.innerHTML += `${queue.dequeue()},`
+    //清空栈
+    queue.clear();
+    //console.log(stack.isEmpty());
+    res.innerHTML += `${queue.isEmpty()}`
+}
+</script>
+</section>
+
+<section>
+<h2>对象队列</h2>
+<ul>
+    <li>创建一个类封装队列</li>
+    <li>利用对象操作实现队列操作</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+class Queue{
+    constructor(){
+        this.tailCount = 0;
+        this.headCount = 0;
+        this.items = {};
+    }
+    enqueue(element){}
+    dequeue(){}
+    peek(){}
+    isEmpty(){}
+    clear(){}
+}
+</code></pre>
+</section>
+
+<section>
+<h2>入队</h2>
+<ul>
+    <li>入队只能在队尾添加元素</li>
+    <li>利用对象键值对操作实现入队,this.tailCount作为键，插入元素作为值</li>
+    <li>递增tailCount变量</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+enqueue(element){
+    this.items[this.tailCount] = element;
+    this.tailCount++;
+}
+</code></pre>
+</section>
+<section>
+<h2>检查队空</h2>
+<ul>
+    <li>队空返回true,不空返回false</li>
+    <li>利用变量headCount,tailCount</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+isEmpty(){
+    return this.tailCount - this.headCount === 0;
+}
+</code></pre>
+</section>
+<section>
+<h2>出队</h2>
+<ul>
+    <li>出队只能在队头删除元素</li>
+    <li>利用变量headCount操作实现出栈</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+dequeue(){
+    const ret = this.items[this.headCount];
+    delete this.items[this.headCount];
+    this.headCount++;
+    return ret;
+}
+</code></pre>
+</section>
+<section>
+<h2>查看队头元素</h2>
+<ul>
+    <li>查看队头只获取队头元素,不删除</li>
+    <li>利用变量headCount</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+peek(){
+    return this.items[this.headCount];
+}
+
+</code></pre>
+</section>
+
+<section>
+<h2>清空队列</h2>
+<ul>
+    <li>将队列中所有元素清空</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+clear(){
+    this.tailCount = 0;
+    this.headCount = 0;
+    this.items = {};
+}
+</code></pre>
+</section>
+
+<section>
+<h2>队列使用</h2>
+<ul>
+    <li>利用new创建队列对象</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+//建队列
+let queue = new Queue();
+//判队空
+console.log(queue.isEmpty());
+//入队
+queue.enqueue(1);
+queue.enqueue(2);
+//查看队头
+console.log(queue.peek());
+//出队
+console.log(queue.dequeue());
+//清空队列
+queue.clear();
+console.log(queue.isEmpty());
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex3()' value='运行'>
+<div id='ex3' style='font-size:6rem;'></div>
+<script>
+class Queue1{
+    constructor(){
+        this.tailCount = 0;
+        this.headCount = 0;
+        this.items = {};
+    }
+    enqueue(element){
+        this.items[this.tailCount] = element;
+        this.tailCount++;
+    }
+    dequeue(){
+        const ret = this.items[this.headCount];
+        delete this.items[this.headCount];
+        this.headCount++;
+        return ret;
+    }
+    peek(){
+        return this.items[this.headCount];        
+    }
+    isEmpty(){
+        return this.tailCount - this.headCount === 0;
+    }
+    clear(){
+        this.tailCount = 0;
+        this.headCount = 0;
+        this.items = {};
+    }
+}
+function ex3(){
+    let res = document.getElementById('ex3');
+
+    //建栈
+    let queue = new Queue1();
+    //判栈空
+    //console.log(stack.isEmpty());
+    res.innerHTML = `${queue.isEmpty()},`
+
+    //进栈
+    queue.enqueue(1);
+    queue.enqueue(2);
+    //查看栈顶
+    //console.log(stack.peek());
+    res.innerHTML += `${queue.peek()},`
+    //出栈
+    //console.log(stack.pop());
+    res.innerHTML += `${queue.dequeue()},`
+    //清空栈
+    queue.clear();
+    //console.log(stack.isEmpty());
+    res.innerHTML += `${queue.isEmpty()}`
+}
+</script>
+</section>
+<section>
+<h2>双端队列概念</h2>
+<ul>
+    <li>遵守先进先出(FIFO)和后进先出(LIFO)的有序集合</li>
+    <li>将队列和栈相结合</li>
+    <li>一个双端队列包含队头，队尾</li>
+    <li>可在队尾，队头添加删除元素</li>
+    <li>生活实例:排队</li>
+    <li>计算机实例:撤销操作队列</li>
+</ul>
+</section>
+
+<section>
+<h2>双端队列操作</h2>
+<ul>
+    <li>建队列</li>
+    <li>队尾添加</li>
+    <li>队头添加</li>
+    <li>队尾删除</li>
+    <li>队头删除</li>
+    <li>查看队尾</li>
+    <li>查看队头</li>
+    <li>检查队空</li>
+    <li>清空队列</li>
+</ul>
+</section>
+</section>
+<section>
+<h2>双端队列实现</h2>
+<ul>
+    <li>基于数组的双端队列</li>
+    <li>基于对象的双端队列</li>
+</ul>
+</section>
+
+<section>
+<h2>数组双端队列</h2>
+<ul>
+    <li>创建一个类封装双端队列</li>
+    <li>利用数组操作实现双端队列操作</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+class Deque{
+    constructor(){
+        this.items = [];
+    }
+    addHead(element){}
+    addTail(element){}
+    removeHead(){}
+    removeTail(){}
+    peekHead(){}
+    peekTail(){}
+    isEmpty(){}
+    clear(){}
+}
+</code></pre>
+</section>
+
+<section>
+<h2>对象双端队列</h2>
+<ul>
+    <li>创建一个类封装双端队列</li>
+    <li>利用对象操作实现双端队列操作</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+class Deque{
+    constructor(){
+        this.tailCount = 0;
+        this.headCount = 0;
+        this.items = {};
+    }
+    addHead(element){}
+    addTail(element){}
+    removeHead(){}
+    removeTail(){}
+    peekHead(){}
+    peekTail(){}
+    isEmpty(){}
+    clear(){}
+}
+</code></pre>
+</section>
+
+<section>
+<h2>检查队空</h2>
+<ul>
+    <li>队空返回true,不空返回false</li>
+    <li>利用变量headCount,tailCount</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+isEmpty(){
+    return this.tailCount - this.headCount === 0;
+}
+</code></pre>
+</section>
+<section>
+<h2>队尾添加元素</h2>
+<ul>
+    <li>利用变量tailCount</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+addTail(element){
+    this.items[this.tailCount] = element;
+    this.tailCount++;
+}
+
+</code></pre>
+</section>
+<section>
+<h2>队尾删除元素</h2>
+<ul>
+    <li>利用变量tailCount</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+removeTail(){
+    this.tailCount--;
+    let ret = this.items[this.tailCount];
+    delete this.items[this.tailCount];
+    return ret;
+}
+</code></pre>
+</section>
+<section>
+<h2>队头添加元素</h2>
+<ul>
+    <li>利用变量headCount</li>
+    <li>分三种情况:空队列,headCount>0,headCount=0</li>
+</ul>
+</section>
+<section>
+<h2>队头添加元素</h2>
+<pre><code class='hljs' data-line-numbers=''>
+addHead(element){
+    if(this.isEmpty()){
+        this.addTail(element);
+    }
+    else if(this.headCount > 0){
+        this.headCount--;
+        this.items[this.headCount] = element;
+    }
+    else {
+        for(let i = this.tailCount; i > 0; i--){
+            this.items[i] = this.items[i - 1];
+        }
+        this.tailCount++;
+        this.headCount = 0;
+        this.items[this.headCount] = element;
+    }
+}
+
+</code></pre>
+</section>
+<section>
+<h2>队头删除元素</h2>
+<ul>
+    <li>利用变量headCount操作实现出队</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+removeHead(){
+    const ret = this.items[this.headCount];
+    delete this.items[this.headCount];
+    this.headCount++;
+    return ret;
+}
+</code></pre>
+</section>
+<section>
+<h2>查看队尾元素</h2>
+<ul>
+    <li>查看队尾只获取队尾元素,不删除</li>
+    <li>利用变量tailCount</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+peekTail(){
+    return this.items[this.tailCounti - 1];
+}
+
+</code></pre>
+</section>
+<section>
+<h2>查看队头元素</h2>
+<ul>
+    <li>查看队头只获取队头元素,不删除</li>
+    <li>利用变量headCount</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+peekHead(){
+    return this.items[this.headCount];
+}
+
+</code></pre>
+</section>
+
+<section>
+<h2>清空队列</h2>
+<ul>
+    <li>将队列中所有元素清空</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+clear(){
+    this.tailCount = 0;
+    this.headCount = 0;
+    this.items = {};
+}
+</code></pre>
+</section>
+
+<section>
+<h2>双端队列使用</h2>
+<ul>
+    <li>利用new创建双端队列对象</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+//建队列
+let queue = new Deque();
+//判队空
+console.log(queue.isEmpty());
+//入队
+queue.addTail(1);
+queue.addTail(2);
+queue.addTail(3);
+queue.addHead(4);
+//查队
+console.log(queue.peekHead());
+console.log(queue.peekTail());
+
+//出队
+console.log(queue.removeHead());
+console.log(queue.removeTail());
+//清空队列
+queue.clear();
+console.log(queue.isEmpty());
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex4()' value='运行'>
+<div id='ex4' style='font-size:6rem;'></div>
+<script>
+class Deque{
+    constructor(){
+        this.items = [];
+    }
+    addTail(e){
+        this.items.push(e);
+    }
+    removeTail(){
+        return this.items.pop();
+    }
+    addHead(e){
+        this.items.unshift(e);
+    }
+    removeHead(){
+        return this.items.shift();
+    }
+    peekHead(){
+        return this.items[0];        
+    }
+    peekTail(){
+        return this.items[this.items.length - 1];
+    }
+    isEmpty(){
+        return this.items.length === 0;
+    }
+    size(){
+        return this.items.length;
+    }
+    clear(){
+        this.items = [];
+    }
+}
+function ex4(){
+    let res = document.getElementById('ex4');
+
+    //建栈
+    let queue = new Deque();
+    //判栈空
+    //console.log(stack.isEmpty());
+    res.innerHTML = `${queue.isEmpty()},`
+
+    //进栈
+    queue.addTail(1);
+    queue.addTail(2);
+    queue.addTail(3);
+    queue.addHead(4);
+    //查看
+    //console.log(stack.peek());
+    res.innerHTML += `${queue.peekHead()},`
+    res.innerHTML += `${queue.peekTail()},`
+    //出栈
+    //console.log(stack.pop());
+    res.innerHTML += `${queue.removeHead()},`
+    res.innerHTML += `${queue.removeTail()},`
+    //清空栈
+    queue.clear();
+    //console.log(stack.isEmpty());
+    res.innerHTML += `${queue.isEmpty()}`
+}
+</script>
+</section>
+<section>
+<h2>回文问题</h2>
+<ul>
+    <li>正反都能读通的单词、词组、数或一系列字符的序列</li>
+    <li>单个字符即是回文</li>
+    <li>例如:madam,racecar,a,b</li>
+</ul>
+</section>
+<section>
+<h2>循环检测回文</h2>
+<ul>
+    <li>分别从头尾两个方向i,j遍历</li>
+    <li>若i<=j每个字符都相同，则为回文</li>
+</ul>
+<pre><code class='hljs' data-line-numbers=''>
+function isPalindrome(str) {   
+    for(let i = 0, j = str.length - 1; i <= j;i++,j--){
+        if(str.charAt(i) !== str.charAt(j)) return false;
+    }
+    return true;
+} 
+alert(isPalindrome('madam'));
+alert(isPalindrome1('a'));
+alert(isPalindrome1('aa'));
+alert(isPalindrome1('客上天然居；居然天上客'))
+alert(isPalindrome1('ab'))
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex6()' value='运行'>
+<div id='ex6' style='font-size:6rem;'></div>
+<script>
+function isPalindrome1(str) {   
+    for(let i = 0, j = str.length - 1; i <= j;i++,j--){
+        if(str.charAt(i) !== str.charAt(j)) return false;
+    }
+    return true;
+} 
+function ex6(){
+    let res = document.getElementById('ex6');
+    alert(isPalindrome1('madam'));
+    alert(isPalindrome1('a'));
+    alert(isPalindrome1('aa'));
+    alert(isPalindrome1('客上天然居；居然天上客'))
+    alert(isPalindrome1('ab'))
+}
+</script>
+</section>
+<section>
+<h2>数组检测回文</h2>
+<ul>
+    <li>先字符串1转成数组</li>
+    <li>利用数组reverse()方法反转</li>
+    <li>再将数组转成字符串2</li>
+    <li>若字符串1和2一样，则为回文</li>
+</ul>
+</section>
+<section>
+<h2>数组检测回文</h2>
+<pre><code class='hljs' data-line-numbers=''>
+function isPalindrome(str) {   
+    let a = str.split('');
+    let b = a.reverse().join('');
+    if(str === b){
+        return true;
+    }
+    return false;
+} 
+alert(isPalindrome('madam'));
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex5()' value='运行'>
+<div id='ex5' style='font-size:6rem;'></div>
+<script>
+function isPalindrome2(str) {   
+    let a = str.split('');
+    let b = a.reverse().join('');
+    if(str === b){
+        return true;
+    }
+    return false;
+} 
+function ex5(){
+    let res = document.getElementById('ex5');
+    alert(isPalindrome2('madam'));
+}
+</script>
+</section>
+<section>
+<h2>栈检测回文</h2>
+<ul>
+    <li>先将每个字符进栈</li>
+    <li>再依次出栈形成新字符串</li>
+    <li>比较两个字符串，若相同则为回文</li>
+</ul>
+</section>
+<section>
+<h2>栈检测回文</h2>
+<pre><code class='hljs' data-line-numbers=''>
+function isPalindrome(str) {   
+    let stack = new Stack();
+    let temp = '';
+    for(let i = 0; i < str.length; i++){
+        stack.push(str.charAt(i));
+    }
+    while(!stack.isEmpty()){
+           temp += `${stack.pop()}`;
+    }
+    if(str === temp) return true;
+    return false;
+} 
+alert(isPalindrome('madam'));
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex7()' value='运行'>
+<div id='ex7' style='font-size:6rem;'></div>
+<script>
+class Stack{
+    constructor(){
+        this.items = [];
+    }
+    push(element){
+        this.items.push(element);
+    }
+    pop(){
+        return this.items.pop();
+    }
+    peek(){
+        return this.items[this.items.length -1];        
+    }
+    isEmpty(){
+        return this.items.length === 0;
+    }
+    clear(){
+        this.items = [];
+    }
+}
+function isPalindrome3(str) {   
+    let stack = new Stack();
+    let temp = '';
+    for(let i = 0; i < str.length; i++){
+        stack.push(str.charAt(i));
+    }
+    while(!stack.isEmpty()){
+           temp += `${stack.pop()}`;
+    }
+    if(str === temp) return true;
+    return false;
+} 
+function ex7(){
+    let res = document.getElementById('ex7');
+    alert(isPalindrome3('madam'));
+}
+</script>
+</section>
+<section>
+<h2>队列检测回文</h2>
+<ul>
+    <li>先将每个字符入队</li>
+    <li>再分别从队列两端出队</li>
+    <li>比较出队字符，若相同则继续，直到队列长度大于1</li>
+</ul>
+</section>
+<section>
+<h2>队列检测回文</h2>
+<pre><code class='hljs' data-line-numbers=''>
+function isPalindrome(str) {   
+    let deque = new Deque();
+    let s,e;
+    for(let i = 0; i < str.length; i++){
+        deque.addTail(str.charAt(i));
+    }
+    while(deque.size() > 1){
+        s = deque.removeHead();
+        e = deque.removeTail();
+        if(s !== e) return false;
+    }
+    return true;
+} 
+alert(isPalindrome('madam'));
+</code></pre>
+<input type='button' style='font-size:3rem;' onclick='ex8()' value='运行'>
+<div id='ex8' style='font-size:6rem;'></div>
+<script>
+function isPalindrome4(str) {   
+    let deque = new Deque();
+    let s,e;
+    for(let i = 0; i < str.length; i++){
+        deque.addTail(str.charAt(i));
+    }
+    while(deque.size() > 1){
+        s = deque.removeHead();
+        e = deque.removeTail();
+        if(s !== e) return false;
+    }
+    return true;
+} 
+function ex8(){
+    let res = document.getElementById('ex8');
+    alert(isPalindrome4('madam'));
+}
+</script>
+</section>
+<section>
+<h2>任务</h2>
+<h2>二选一</h2>
+<h4>1.利用数组设计双端队列数据结构，并利用该种队列设计检测回文算法。</h4>
+<h4>2.设计一个消息队列，用setInterval分别模拟发送与接收任务，发送任务每500ms发送一个消息到队列，接收任务每1000ms接收一个消息，模拟异步通信。</h4>
+</section>
+<section data-markdown>
+## 牛二定律
+$$ F = ma $$
+## 质能方程
+$$ E = mc^2 $$
+## 万有引力
+$$ F = \frac{GMm}{r^2} $$
+</section>
+<section data-markdown>
+## 矩阵
+$$
+\left[
+\begin{matrix}
+1 & 2 & 3 \\\\
+4 & 5 & 6 \\\\ 
+7 & 8 & 9 
+\end{matrix}
+\right]
+$$
+$$
+\begin{vmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\\\
+a_{21} & a_{22} & \cdots & a_{2n} \\\\ 
+\vdots & \vdots & \ddots & \vdots \\\\ 
+a_{m1} & a_{m2} & \cdots & a_{mn} 
+\end{vmatrix}
+$$
+
+</section>
+<section data-markdown>
+## 分段函数
+$$
+f(n)=
+\begin{cases}
+n/2,& \text{if $n$ is even}\\\\
+3n+1,& \text{if $n$ is odd}
+\end{cases}
+$$
+</section>
+<section data-markdown>
+## 表格
+$$
+\begin{array}{c|lcr}
+n & \text{Left} & \text{Center} & \text{Right} \\\\
+\hline
+1 & 0.24 & 1 & 125 \\\\
+2 & -1 & 189 & -8 \\\\
+3 & -20 & 2000 & 1+10i
+\end{array}
+$$
+
+| no | lang |
+| :-: | :- |
+| 1| C/C++ |
+| 2|Java/JavaScript |
+
+</section>
+<section data-markdown>
+## 方程组
+$$
+\begin{cases}
+a_1x+b_1y+c_1z=d_1 \\\\ 
+a_2x+b_2y+c_2z=d_2 \\\\ 
+a_3x+b_3y+c_3z=d_3 \\\\
+\end{cases}
+$$
+</section>
+<section>
+<div id='diagram'></div>
+<script>
+let code =`
+st=>start: Start|past:>http://www.google.com[blank]
+e=>end: End:>http://www.google.com
+op1=>operation: My Operation|past:$myFunction
+op2=>operation: Stuff|current
+sub1=>subroutine: My Subroutine|invalid
+cond=>condition: Yes
+or No?|approved:>http://www.google.com
+c2=>condition: Good idea|rejected
+io=>inputoutput: catch something...|request
+para=>parallel: parallel tasks
+
+st->op1(right)->cond
+cond(yes, right)->c2
+cond(no)->para
+c2(true)->io->e
+c2(false)->e
+
+para(path1, bottom)->sub1(left)->op1
+para(path2, right)->op2->e
+
+`;
+let dia = flowchart.parse(code);
+dia.drawSVG('diagram', {
+'x': 10,
+'y': 10,
+'line-width': 2,
+'maxWidth': 3,//ensures the flowcharts fits within a certian width
+'line-length': 30,
+'text-margin': 10,
+'font-size': 10,
+'font': 'normal',
+'font-family': 'Helvetica',
+'font-weight': 'normal',
+'font-color': 'black',
+'line-color': 'black',
+'element-color': 'black',
+'fill': 'white',
+'yes-text': 'yes',
+'no-text': 'no',
+'arrow-end': 'block',
+'scale': 1,
+'symbols': {
+  'start': {
+    'font-color': 'red',
+    'element-color': 'green',
+    'fill': 'yellow'
+  },
+  'end':{
+    'class': 'end-element'
+  }
+},
+'flowstate' : {
+  'past' : { 'fill' : '#CCCCCC', 'font-size' : 12},
+  'current' : {'fill' : 'yellow', 'font-color' : 'red', 'font-weight' : 'bold'},
+  'future' : { 'fill' : '#FFFF99'},
+  'request' : { 'fill' : 'blue'},
+  'invalid': {'fill' : '#444444'},
+  'approved' : { 'fill' : '#58C4A3', 'font-size' : 12, 'yes-text' : 'APPROVED', 'no-text' : 'n/a' },
+  'rejected' : { 'fill' : '#C45879', 'font-size' : 12, 'yes-text' : 'n/a', 'no-text' : 'REJECTED' }
+}
+});
+</script>
+</section>
+<section>
+<div id="main" style="width: 1024px;height:768px;"></div>
+<script type="text/javascript">
+// 基于准备好的dom，初始化echarts实例
+var myChart = echarts.init(document.getElementById('main'), 'dark');
+
+// 指定图表的配置项和数据
+var option = {
+title: {
+    text: 'ECharts 入门示例'
+},
+tooltip: {},
+legend: {
+    data:['销量']
+},
+xAxis: {
+    data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+},
+yAxis: {},
+series: [{
+    name: '销量',
+    type: 'bar',
+    data: [5, 20, 36, 10, 10, 20]
+}]
+};
+// 使用刚指定的配置项和数据显示图表。
+myChart.setOption(option);
+</script>
+</section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+                transition: 'slide',
+                slideNumber:true,
+                math: {
+                    mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                    config: 'TeX-AMS_HTML-full', // See http://docs.mathjax.org/en/latest/config-files.html
+                    // pass other options into `MathJax.Hub.Config()`
+                    TeX: { Macros: { RR: "{\\bf R}" } }
+                },
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/highlight/highlight.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/math/math.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>

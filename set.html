@@ -1,0 +1,779 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
+
+    <title>集合Set</title>
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/moon.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css">
+
+    <script src="echarts.js"></script>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <dialog id="indialog">
+    <h2>输入对话框</h2><br>
+    <div id="inmessage"></div><br>
+    <input id="input" style="height:50px;font-size:50px;" size="10" value="">
+    <div>
+    <br>
+    <button id="okindialog">确定</button>
+    <button id="closeindialog">关闭</button>
+    </div>
+    </dialog>
+    <dialog id="outdialog">
+    <h2>输出对话框</h2><br>
+    <div id="outmessage"></div>
+    <div>
+    <br>
+    <button id="closeoutdialog">关闭</button>
+    </div>
+    </dialog>
+    <script>
+        let useragent = navigator.userAgent;
+        let inputEvent = new Event("inputComplete");//自定义输入完成事件
+        document.getElementById("closeindialog").onclick = function(){
+            document.querySelector("#indialog").close();
+        };
+        document.getElementById("okindialog").onclick = function(){
+            document.querySelector("#indialog").close();
+            let input = document.getElementById("input");
+            input.dispatchEvent(inputEvent);
+        };
+        document.getElementById("closeoutdialog").onclick = function(){
+            document.querySelector("#outdialog").close();
+        };
+        //输入对话框
+        function inputDialog(s){
+            if(useragent.indexOf("Chrome") > -1){
+                let dialog = document.querySelector("#indialog");
+                let msg = document.getElementById("inmessage");
+                msg.innerHTML = `<font size="20">${s}</font>`;
+                document.getElementById("input").value = "";
+                dialog.showModal();
+            }
+            else{
+                let input = prompt(s);
+                if (input != null) {
+                    let input1 = document.getElementById("input");
+                    input1.value = input;
+                    input1.dispatchEvent(inputEvent);
+                }
+            }
+        }
+        //输出对话框
+        function outputDialog(s){
+            if(useragent.indexOf("Chrome") > -1){
+                let dialog = document.querySelector("#outdialog");
+                let msg = document.getElementById("outmessage");
+                msg.innerHTML = `<font size="20">${s}</font>`;
+                dialog.showModal();
+            }
+            else{
+                alert(s);
+            }
+        }
+    </script>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <h1>集合(Set)</h1>
+                <h3>李艳生</h3>
+                <h3>湖北师范大学</h3>
+                <h3>物理与电子科学学院</h3>
+                <h3>2020年春季</h3>
+            </section>
+
+            <section>
+                <h2>回顾</h2>
+                <ul>
+                    <li><font color="#ff0000">数组</font>:随机访问</li>
+                    <li><font color="#ff0000">栈</font>:后进先出</li>
+                    <li><font color="#ff0000">队列</font>:先进先出</li>
+                    <li><font color="#ff0000">链表</font>:增删效率高</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>引入</h2>
+                <h3>请大家思考我们要存储一组<font color="#ff0000">值不重复的</font>有序数据，可以用什么数据结构？</h3>
+            </section>
+
+            <section>
+                <h2>内容</h2>
+                <h3>集合(重点)</h3>
+                <h3>集合运算(重点)</h3>
+                <h3>原生集合</h3>
+                <h3>任务</h3>
+            </section>
+
+            <section>
+                <h2>集合</h2>
+                <ul>
+                    <li>集合实例：自然数集合 N = {0, 1, 2, 3, ...}</li>
+                    <li>集合是一组不同对象的集</li>
+                    <li>集合特征：无序性、确定性、唯一性</li>
+                    <li>集合是一个没有重复元素，也没有顺序概念的数组</li>
+                    <li>集合运算：并、交、差、子</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>集合操作</h2>
+                <ul>
+                    <li>创建集合</li>
+                    <li>查找</li>
+                    <li>添加</li>
+                    <li>删除</li>
+                    <li>清空</li>
+                    <li>长度</li>
+                    <li>转数组</li>
+                </ul>
+            </section>
+            <section>
+                <h2>算法演示</h2>
+                <input type='button' style='font-size:5rem;' onclick='ex1()' value='添加元素'>
+                <input type='button' style='font-size:5rem;' onclick='ex2()' value='删除元素'>
+                <input type='button' style='font-size:5rem;' onclick='ex3()' value='显示集合'>
+                <script>
+                    class Set{
+                        constructor(){
+                            this.items = {};
+                        }
+
+                        add(element){
+                            if (!this.has(element)) {
+                                this.items[element] = element;
+                                return true;
+                            }
+                            return false;
+                        } 
+                        delete(element){
+                            if (this.has(element)) {
+                                delete this.items[element];
+                                return true;
+                            }
+                            return false;
+                        } 
+                        has(element){
+                            return element in this.items;
+                        } 
+                        clear() {
+                            this.items = {};
+                        }
+                        size() {
+                            return Object.keys(this.items).length;
+                        }
+                        values() {
+                            return Object.values(this.items);
+                        }
+
+                        union(otherSet) {
+                            const unionSet = new Set(); 
+                            this.values().forEach(value => unionSet.add(value));
+                            otherSet.values().forEach(value => unionSet.add(value));
+                            return unionSet;
+                        }
+                        intersection(otherSet) {
+                            const intersectionSet = new Set(); 
+                            const values = this.values();
+                            for (let i = 0; i < values.length; i++) {
+                                if (otherSet.has(values[i])) {
+                                    intersectionSet.add(values[i]); 
+                                }
+                            }
+                            return intersectionSet;
+                        }
+                        difference(otherSet) {
+                            const differenceSet = new Set(); 
+                            this.values().forEach(value => { 
+                                if (!otherSet.has(value)) { 
+                                    differenceSet.add(value); 
+                                }
+                            });
+                            return differenceSet;
+                        }
+                        isSubsetOf(otherSet) {
+                            if (this.size() > otherSet.size()) { 
+                                return false;
+                            }
+                            let isSubset = true; 
+                            this.values().every(value => { 
+                                if (!otherSet.has(value)) { 
+                                    isSubset = false; 
+                                    return false;
+                                }
+                                return true; 
+                            });
+                            return isSubset; 
+                        }
+                    }
+                    
+                    let set = new Set();//定义集合
+
+                    function ex1() {
+                        inputDialog('请输入要添加的集合元素：');
+                        let input = document.getElementById("input");
+                        input.addEventListener("inputComplete", function(){
+                            if(input.value != null){
+                                set.add(input.value);
+                            }
+                        })
+                        //let input = prompt('请输入要添加的集合元素：');
+                        //if (input != null) {
+                        //    set.add(input);
+                        //}
+                    }
+
+                    function ex2() {
+                        /*
+                        let input = prompt('请输入要删除的集合元素：');
+                        if (input != null) {
+                            set.delete(input);
+                        }
+                        */
+                        inputDialog('请输入要删除的集合元素：');
+                        let input = document.getElementById("input");
+                        input.addEventListener("inputComplete", function(){
+                            if(input.value != null){
+                                set.delete(input.value);
+                            }
+                        })
+                    }
+
+                    function ex3() {
+                        outputDialog(`集合为{${set.values().toString()}}`);
+                        //alert(`集合为{${set.values().toString()}}`);
+                    }
+                </script>
+            </section>
+            <section>
+                <h2>创建集合</h2>
+                <ul>
+                    <li>JavaScript 的对象不允许一个键指向两个不同的属性，也保证了集合里的元素都是唯一的。</li>
+                    <li>使用对象而不是数组来表示集合</li>
+                    <li>键和值都用元素来表示，方便查找</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>创建集合</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+    class Set{
+        constructor(){
+            this.items = {};
+        }
+        add(element){} //添加
+        delete(element){} //删除
+        has(element) //查找
+        clear() //清空
+        size() // 长度
+        values() //转数组
+    }
+    </code></pre>
+            </section>
+
+            <section>
+                <h2>查找元素</h2>
+                <ul>
+                    <li>如果元素在集合中，返回true，否则返回false。</li>
+                    <li>用来检验某个元素是否存在于集合中</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+has(element){
+    return element in this.items;
+    // return Object.prototype.hasOwnProperty.call(this.items, element);
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>添加元素</h2>
+                <ul>
+                    <li>对于给定的element，可以检查它是否存在于集合中。</li>
+                    <li>如果不存在，就把element 添加到集合中,返回true，表示添加了该元素</li>
+                    <li>如果集合中已经有了这个元素，就返回false，表示没有添加它。</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>添加元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+add(element) {
+    if (!this.has(element)) {
+        this.items[element] = element; 
+        return true;
+    }
+    return false;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>删除元素</h2>
+                <ul>
+                    <li>首先，验证给定的element 是否存在于集合中</li>
+                    <li>如果存在，就从集合中移除element，返回true，表示元素被移除；否则返回false</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>删除元素</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+delete(element) {
+    if (this.has(element)) {
+        delete this.items[element]; 
+        return true;
+    }
+    return false;
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>获取长度</h2>
+                <ul>
+                    <li>返回集合中有多少元素</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+size() {
+    return Object.keys(this.items).length;
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>清空</h2>
+                <ul>
+                    <li>清空集合</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+clear() {
+    this.items = {};
+}
+</code></pre>
+            </section>
+
+            <section>
+                <h2>转数组</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+values(){
+    return Object.values(this.items);
+}
+</code></pre>
+            </section>
+            <section>
+                <h2>集合使用</h2>
+                <ul>
+                    <li>用new创建Set对象</li>
+                </ul>
+                <pre><code class='hljs' data-line-numbers=''>
+const set = new Set();
+set.add(1);
+console.log(set.values()); // 输出[1]
+console.log(set.has(1)); // 输出true
+console.log(set.size()); // 输出1
+set.add(2);
+console.log(set.values()); // 输出[1, 2]
+console.log(set.has(2)); // 输出true
+console.log(set.size()); // 输出2
+set.delete(1);
+console.log(set.values()); // 输出[2]
+set.delete(2);
+console.log(set.values()); // 输出[]
+</code></pre>
+            </section>
+
+            <section>
+                <h2>集合运算</h2>
+                <ul>
+                    <li><font color="#ff0000">并集</font>：返回一个包含两个集合中所有元素的新集合。</li>
+                    <li><font color="#ff0000">交集</font>：返回一个包含两个集合中共有元素的新集合。</li>
+                    <li><font color="#ff0000">差集</font>：返回一个包含所有存在于第一个集合且不存在于第二个集
+合的元素的新集合。</li>
+                    <li><font color="#ff0000">子集</font>：验证一个给定集合是否是另一集合的子集。</li>
+                </ul>
+            </section>
+
+            <section data-markdown>
+                ## 并集
+
+                #### 并集表示
+                $ A \bigcup B $
+                #### 并集定义
+                $ A \bigcup B = \\{ x | x \in A \bigvee x \in B \\} $
+                ![并集图示](img/6/1.png) 
+            </section>
+
+            <section>
+                <h2>并集</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+union(otherSet) {
+    const unionSet = new Set(); 
+    this.values().forEach(value => unionSet.add(value));
+    otherSet.values().forEach(value => unionSet.add(value));
+    return unionSet;
+}
+                </code></pre>
+            </section>
+            <section>
+                <h2>并集</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+const setA = new Set();
+setA.add(1);
+setA.add(2);
+setA.add(3);
+const setB = new Set();
+setB.add(3);
+setB.add(4);
+setB.add(5);
+setB.add(6);
+const unionAB = setA.union(setB);
+console.log(unionAB.values());
+                </code></pre>
+                <input type='button' style='font-size:5rem;' onclick='ex4()' value='运行'>
+                <script>
+function ex4(){
+    const setA = new Set();
+    setA.add(1);
+    setA.add(2);
+    setA.add(3);
+    const setB = new Set();
+    setB.add(3);
+    setB.add(4);
+    setB.add(5);
+    setB.add(6);
+    const unionAB = setA.union(setB);
+    console.log(unionAB.values());
+    outputDialog(`结果为：${unionAB.values().toString()}`)
+    //alert(`结果为：${unionAB.values().toString()}`)
+}
+                </script>
+            </section>
+            <section data-markdown>
+                ## 交集
+
+                #### 交集表示
+                $ A \bigcap B $
+                #### 交集定义
+                $ A \bigcap B = \\{ x | x \in A \bigwedge x \in B \\} $
+                ![并集图示](img/6/2.png) 
+            </section>
+            <section>
+                <h2>交集</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+intersection(otherSet) {
+    const intersectionSet = new Set(); 
+    const values = this.values();
+    for (let i = 0; i < values.length; i++) {
+        if (otherSet.has(values[i])) {
+            intersectionSet.add(values[i]); 
+        }
+    }
+    return intersectionSet;
+}
+                </code></pre>
+            </section>
+            <section>
+                <h2>交集</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+const setA = new Set();
+setA.add(1);
+setA.add(2);
+setA.add(3);
+const setB = new Set();
+setB.add(2);
+setB.add(3);
+setB.add(4);
+const intersectionAB = setA.intersection(setB);
+console.log(intersectionAB.values());
+                </code></pre>
+                <input type='button' style='font-size:5rem;' onclick='ex5()' value='运行'>
+                <script>
+
+function ex5(){
+    const setA = new Set();
+    setA.add(1);
+    setA.add(2);
+    setA.add(3);
+    const setB = new Set();
+    setB.add(2);
+    setB.add(3);
+    setB.add(4);
+    const intersectionAB = setA.intersection(setB);
+    console.log(intersectionAB.values());
+    outputDialog(`结果为${intersectionAB.values().toString()}`)
+    //alert(`结果为${intersectionAB.values().tostring()}`)
+}
+                </script>
+            </section>
+            <section data-markdown>
+                ## 差集
+
+                #### 差集表示
+                $ A - B $
+                #### 差集定义
+                $ A - B = \\{ x | x \in A \bigwedge x \notin B \\} $
+                ![并集图示](img/6/3.png) 
+            </section>
+            <section>
+                <h2>差集</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+difference(otherSet) {
+    const differenceSet = new Set(); 
+    this.values().forEach(value => { 
+        if (!otherSet.has(value)) { 
+            differenceSet.add(value); 
+        }
+    });
+    return differenceSet;
+}
+                </code></pre>
+            </section>
+            <section>
+                <h2>差集</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+const setA = new Set();
+setA.add(1);
+setA.add(2);
+setA.add(3);
+const setB = new Set();
+setB.add(2);
+setB.add(3);
+setB.add(4);
+const differenceAB = setA.difference(setB);
+console.log(differenceAB.values());
+                </code></pre>
+                <input type='button' style='font-size:5rem;' onclick='ex6()' value='运行'>
+                <script>
+function ex6(){
+
+    const setA = new Set();
+    setA.add(1);
+    setA.add(2);
+    setA.add(3);
+    const setB = new Set();
+    setB.add(2);
+    setB.add(3);
+    setB.add(4);
+    const differenceAB = setA.difference(setB);
+    console.log(differenceAB.values());
+    outputDialog(`结果为${differenceAB.values().toString()}`)
+    //alert(`结果为${differenceAB.values().toString()}`)
+}
+                </script>
+            </section>
+            <section data-markdown>
+                ## 子集
+
+                #### 子集表示
+                $ A \subseteq B $
+                #### 子集定义
+                $ A \subseteq B = \\{ x | \forall x \in A \Rightarrow x \in B \\} $
+                ![并集图示](img/6/4.png) 
+            </section>
+            <section>
+                <h2>子集</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+isSubsetOf(otherSet) {
+    if (this.size() > otherSet.size()) { 
+        return false;
+    }
+    let isSubset = true; 
+    this.values().every(value => { 
+        if (!otherSet.has(value)) { 
+            isSubset = false; 
+            return false;
+        }
+        return true; 
+    });
+    return isSubset; 
+}
+                </code></pre>
+            </section>
+            <section>
+                <h2>子集</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+const setA = new Set();
+setA.add(1);
+setA.add(2);
+const setB = new Set();
+setB.add(1);
+setB.add(2);
+setB.add(3);
+const setC = new Set();
+setC.add(2);
+setC.add(3);
+setC.add(4);
+console.log(setA.isSubsetOf(setB));
+console.log(setA.isSubsetOf(setC));
+                </code></pre>
+                <input type='button' style='font-size:5rem;' onclick='ex7()' value='运行'>
+                <script>
+function ex7(){
+
+    const setA = new Set();
+    setA.add(1);
+    setA.add(2);
+    const setB = new Set();
+    setB.add(1);
+    setB.add(2);
+    setB.add(3);
+    const setC = new Set();
+    setC.add(2);
+    setC.add(3);
+    setC.add(4);
+    console.log(setA.isSubsetOf(setB));
+    console.log(setA.isSubsetOf(setC));
+    //alert(`结果为${setA.isSubsetOf(setB)},${setA.isSubsetOf(setC)}`);
+    outputDialog(`结果为${setA.isSubsetOf(setB)},${setA.isSubsetOf(setC)}`)
+}
+                </script>
+            </section>
+            <section>
+                <h2>原生集合</h2>
+                <ul>
+                    <li>ECMAScript 2015 新增了Set 类作为JavaScript API</li>
+                    <li>ES2015 原生的Set 并没有实现了并集、交集、差集、子集</li>
+                </ul>
+            </section>
+            <section>
+                <h2>原生集合</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+const set = new Set();
+set.add(1);
+console.log(set.values()); // 输出@Iterator
+console.log(set.has(1)); // 输出true
+console.log(set.size); // 输出1
+set.delete(1);
+set.clear();
+</code></pre>
+            </section>
+            <section>
+                <h2>原生集合运算</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+const setA = new Set();
+setA.add(1);
+setA.add(2);
+setA.add(3);
+const setB = new Set();
+setB.add(2);
+setB.add(3);
+setB.add(4);
+</code></pre>
+            </section>
+
+            <section>
+                <h2>并集</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+const union = (setA, setB) => {
+    const unionAb = new Set();
+    setA.forEach(value => unionAb.add(value));
+    setB.forEach(value => unionAb.add(value));
+    return unionAb;
+};
+console.log(union(setA, setB)); // 输出[1, 2, 3, 4]
+</code></pre>
+            </section>
+            <section>
+                <h2>交集</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+const intersection = (setA, setB) => {
+    const intersectionSet = new Set();
+    setA.forEach(value => {
+        if (setB.has(value)) {
+            intersectionSet.add(value);
+        }
+    });
+    return intersectionSet;
+};
+console.log(intersection(setA, setB)); // 输出[2, 3]
+</code></pre>
+            </section>
+            <section>
+                <h2>差集</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+const difference = (setA, setB) => {
+    const differenceSet = new Set();
+    setA.forEach(value => {
+        if (!setB.has(value)) { 
+            differenceSet.add(value);
+        }
+    });
+    return differenceSet;
+};
+console.log(difference(setA, setB)); //输出[1]
+</code></pre>
+            </section>
+            <section>
+                <h2>扩展运算符</h2>
+                <pre><code class='hljs' data-line-numbers=''>
+console.log(new Set([...setA, ...setB])); //并集
+console.log(new Set([...setA].filter(x => setB.has(x)))); //交集
+console.log(new Set([...setA].filter(x => !setB.has(x)))); //差集
+</code></pre>
+            </section>
+            <section>
+                <h2>任务</h2>
+                <h3>随机产生100个1000以内的随机数加入集合A中，再随机产生50个1000以内的随机数加入集合B中，求解A和B的并、交、差。</h3>
+            </section>
+        </div>
+    </div>
+
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info about config & dependencies:
+        // - https://github.com/hakimel/reveal.js#configuration
+        // - https://github.com/hakimel/reveal.js#dependencies
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            slideNumber: true,
+            math: {
+                mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                config: 'TeX-AMS_HTML-full', // See http://docs.mathjax.org/en/latest/config-files.html
+                // pass other options into `MathJax.Hub.Config()`
+                TeX: {
+                    Macros: {
+                        RR: "{\\bf R}"
+                    }
+                }
+            },
+            dependencies: [{
+                    src: 'plugin/markdown/marked.js'
+                },
+                {
+                    src: 'plugin/markdown/markdown.js'
+                },
+                {
+                    src: 'plugin/highlight/highlight.js'
+                },
+                {
+                    src: 'plugin/notes/notes.js',
+                    async: true
+                },
+                {
+                    src: 'plugin/math/math.js',
+                    async: true
+                }
+            ]
+        });
+    </script>
+</body>
+
+</html>
