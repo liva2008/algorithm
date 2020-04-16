@@ -10,3 +10,5 @@
 - 字典(Map)
 - 散列表(HashMap)
 - 递归(Recursion)
+
+推荐大家使用google chrome 或mozilla firefox浏览器观看。
