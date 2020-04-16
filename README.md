@@ -1,4 +1,5 @@
-# Modern Javascript Data Structure and Algorithms PPT
+# PPT of Modern Javascript Data Structure and Algorithms
+# 基于现代Javascript的数据结构与算法PPT
 
 [![logo](http://algorithm.jscoding.net/img/logo.svg)](http://algorithm.jscoding.net)
 
@@ -13,4 +14,4 @@
 - [散列表(HashMap)](http://algorithm.jscoding.net/hashmap.html)
 - [递归(Recursion)](http://algorithm.jscoding.net/recursion.html)
 
-推荐大家使用google chrome 或mozilla firefox浏览器观看。
+推荐大家使用google chrome 或mozilla firefox浏览器观看PPT。
