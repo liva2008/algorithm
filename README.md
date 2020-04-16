@@ -1,5 +1,7 @@
 # Modern Javascript Data Structure and Algorithms PPT
 
+[![logo](img/logo.svg)](http://algorithm.jscoding.net)
+
 ## 目 录
 
 - [数组(Array)](http://algorithm.jscoding.net/array.html)
