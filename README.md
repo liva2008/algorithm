@@ -1,6 +1,6 @@
 # Modern Javascript Data Structure and Algorithms PPT
 
-[![logo](img/logo.svg)](http://algorithm.jscoding.net)
+[![logo](http://algorithm.jscoding.net/img/logo.svg)](http://algorithm.jscoding.net)
 
 ## 目 录
 
