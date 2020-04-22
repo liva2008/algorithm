@@ -1,0 +1,476 @@
+
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>undefined</title>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [
+                    ['$', '$'],
+                    ['\(', '\)']
+                ]
+            },
+            startup: {
+                ready: function () {
+                    MathJax.startup.defaultReady();
+                }
+            }
+        }
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/monokai.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.6.0/dist/highlightjs-line-numbers.min.js">
+    </script>
+    <style>
+    /* for block of numbers */
+    .hljs-ln-numbers {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        text-align: center;
+        color: #ccc;
+        border-right: 5px solid #CCC;
+        vertical-align: top;
+        padding-right: 5px;
+
+        /* your custom style here */
+    }
+
+    /* for block of code */
+    .hljs-ln-code {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    </style>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/reveal.js/3.8.0/css/reveal.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/reveal.js/3.8.0/css/theme/moon.min.css">
+    
+    <script>
+        hljs.initHighlightingOnLoad();
+        hljs.initLineNumbersOnLoad({
+            singleLine: true
+        });
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+
+<section>
+<h2>树（Tree）</h2>
+<h3>李艳生</h3>
+<h3>湖北师范大学</h3>
+<h3>物理与电子科学学院</h3>
+<h3>2020年春季</h3>
+</section><section>
+<h2>回顾</h2>
+<ul>
+<li><em>非线性数据结构</em>
+<ul>
+<li><strong>数组</strong>（随机访问）</li>
+<li><strong>栈</strong>（后进先出）</li>
+<li><strong>队列</strong>（先进先出）</li>
+<li><strong>链表</strong>（增删方便）</li>
+<li><strong>集合</strong>（不重复性）</li>
+<li><strong>字典</strong>（键值对）</li>
+<li><strong>散列表</strong>（查找高效）</li>
+</ul>
+</li>
+</ul>
+</section><section>
+<h2>引入</h2>
+<p><img src="./img/10/family.svg" alt="family"></p>
+<p>家谱</p>
+</section><section>
+<h2>引入</h2>
+<p><img src="./img/10/dir.png" alt="dir"></p>
+<p>目录</p>
+</section><section>
+<h2>引入</h2>
+<p><img src="./img/10/menu.png" alt="menu"></p>
+<p>菜单</p>
+</section><section>
+<h2>树的概念</h2>
+<p><img src="./img/10/concept.png" alt="concept"></p>
+</section><section>
+<h2>树的概念</h2>
+<ul>
+<li><strong>树</strong>：包含一系列<em>父子关系</em>的节点。</li>
+<li><strong>节点</strong>：只有一个<em>父节点</em>和0个或多个<em>子节点</em></li>
+<li><strong>根节点</strong>：没有父节点</li>
+<li><strong>叶子节点</strong>：没有子节点</li>
+<li><strong>子树</strong>：由节点和它的子孙节点组成</li>
+<li><strong>节点的深度</strong>：祖先节点的个数</li>
+<li><strong>树的高度</strong>：所有节点深度的最大值</li>
+</ul>
+</section><section>
+<h2>二叉树</h2>
+<ul>
+<li>二叉树Binary Tree
+<ul>
+<li>每个节点<strong>最多</strong>只有<strong>两个</strong>子节点</li>
+<li>即左子节点和右子节点</li>
+</ul>
+</li>
+</ul>
+<p><img src="./img/10/binarytree.svg" alt="binarytree"></p>
+</section><section>
+<h2>二叉搜索树</h2>
+<ul>
+<li>二叉搜索树Binary Search Tree
+<ul>
+<li>左节点存储比它小的值</li>
+<li>右节点存储比它大的值</li>
+</ul>
+</li>
+</ul>
+<p><img src="./img/10/binarysearchtree.svg" alt="bst"></p>
+</section><section>
+<h2>二叉搜索树操作</h2>
+<ul>
+<li>创建</li>
+<li>插入</li>
+<li>查找</li>
+<li>删除</li>
+<li>遍历</li>
+<li>找最大值、最小值</li>
+</ul>
+</section><section>
+<h2>创建</h2>
+<p><img src="./img/10/1.png" alt="tree"></p>
+</section><section>
+<h2>创建节点</h2>
+<ul>
+<li>存储节点值，并要指向左子节点和右子节点</li>
+</ul>
+<pre><code class="hljs language-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Node</span> </span>{   
+    <span class="hljs-keyword">constructor</span>(key) {     
+        <span class="hljs-keyword">this</span>.key = key; <span class="hljs-comment">// 节点值    </span>
+        <span class="hljs-keyword">this</span>.left = <span class="hljs-literal">null</span>; <span class="hljs-comment">// 指向左子节点    </span>
+        <span class="hljs-keyword">this</span>.right = <span class="hljs-literal">null</span>; <span class="hljs-comment">// 指向右子节点  </span>
+    } 
+}
+</code></pre>
+</section><section>
+<h2>创建树</h2>
+<ul>
+<li>链表创建头结点对象，头结点head属性指向链表第一个节点</li>
+<li>树创建一个对象,对象root属性指向树的根节点</li>
+</ul>
+</section><section>
+<h2>创建树</h2>
+<pre><code class="hljs language-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">defaultCompare</span>(<span class="hljs-params">a, b</span>) </span>{
+  <span class="hljs-keyword">if</span> (a === b) {
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+  }
+  <span class="hljs-keyword">return</span> a &lt; b ? <span class="hljs-number">-1</span> : <span class="hljs-number">1</span>;
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BinarySearchTree</span> </span>{
+    <span class="hljs-keyword">constructor</span>(compareFn = defaultCompare) {     
+        <span class="hljs-keyword">this</span>.compareFn = compareFn; <span class="hljs-comment">// 用来比较节点值    </span>
+        <span class="hljs-keyword">this</span>.root = <span class="hljs-literal">null</span>; <span class="hljs-comment">//  指向Node类型的根节点  </span>
+    }
+    insert(key){}
+    search(key){}
+    remove(key){}
+    inOrderTraverse(){}
+    preOrderTraverse(){}
+    postOrderTraverse(){}
+    min(){}
+    max(){} 
+} 
+</code></pre>
+</section><section>
+<h2>插入</h2>
+<ul>
+<li>第一步是如果树为空，即root为null,创建一个根节点，并用root指向它。</li>
+<li>第二步是将节点添加到根节点以外的其他位置。</li>
+</ul>
+</section><section>
+<h2>插入</h2>
+<pre><code class="hljs language-javascript">insert(key) {
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.root == <span class="hljs-literal">null</span>) { <span class="hljs-comment">//树为空</span>
+    <span class="hljs-keyword">this</span>.root = <span class="hljs-keyword">new</span> Node(key); <span class="hljs-comment">//插入根节点</span>
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">this</span>.insertNode(<span class="hljs-keyword">this</span>.root, key); <span class="hljs-comment">//插入其它位置</span>
+  }
+}
+insertNode(node, key) {
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.compareFn(key, node.key) === <span class="hljs-number">-1</span>) { <span class="hljs-comment">//key &lt; node.key</span>
+    <span class="hljs-keyword">if</span> (node.left == <span class="hljs-literal">null</span>) {
+      node.left = <span class="hljs-keyword">new</span> Node(key);
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">this</span>.insertNode(node.left, key); <span class="hljs-comment">//递归插入左子树</span>
+    }
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (node.right == <span class="hljs-literal">null</span>) { <span class="hljs-comment">//node右子节点为空</span>
+    node.right = <span class="hljs-keyword">new</span> Node(key); <span class="hljs-comment">//插入右子节点位置</span>
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">this</span>.insertNode(node.right, key); <span class="hljs-comment">//递归插入右子树</span>
+  }
+}
+</code></pre>
+</section><section>
+<h2>插入使用</h2>
+<pre><code class="hljs language-javascript"><span class="hljs-comment">//创建一个树对象</span>
+<span class="hljs-keyword">const</span> tree = <span class="hljs-keyword">new</span> BinarySearchTree(); 
+<span class="hljs-comment">//插入一个值</span>
+tree.insert(<span class="hljs-number">7</span>); 
+tree.insert(<span class="hljs-number">15</span>); 
+tree.insert(<span class="hljs-number">5</span>); 
+tree.insert(<span class="hljs-number">3</span>); 
+tree.insert(<span class="hljs-number">9</span>); 
+tree.insert(<span class="hljs-number">8</span>); 
+tree.insert(<span class="hljs-number">10</span>); 
+tree.insert(<span class="hljs-number">13</span>); 
+tree.insert(<span class="hljs-number">12</span>); 
+tree.insert(<span class="hljs-number">14</span>); 
+tree.insert(<span class="hljs-number">20</span>); 
+tree.insert(<span class="hljs-number">18</span>); 
+tree.insert(<span class="hljs-number">25</span>);
+tree.insert(<span class="hljs-number">6</span>)
+</code></pre>
+</section><section>
+<h2>插入使用</h2>
+<p><img src="./img/10/2.png" alt="insert"></p>
+</section><section>
+<h2>树的遍历</h2>
+<blockquote>
+<p>遍历一棵树是指访问树的每个节点并对它们进行某种操作的过程</p>
+<blockquote>
+<p>中序遍历<br>
+先序遍历<br>
+后序遍历</p>
+</blockquote>
+</blockquote>
+</section><section>
+<h2>中序遍历</h2>
+<ul>
+<li>左子节点--节点--右子节点，即从小到大顺序访问</li>
+</ul>
+<pre><code class="hljs language-javascript">inOrderTraverse(callback) {
+  <span class="hljs-keyword">this</span>.inOrderTraverseNode(<span class="hljs-keyword">this</span>.root, callback);
+}
+
+inOrderTraverseNode(node, callback) {
+  <span class="hljs-keyword">if</span> (node != <span class="hljs-literal">null</span>) {
+    <span class="hljs-keyword">this</span>.inOrderTraverseNode(node.left, callback); <span class="hljs-comment">//递归左子节点</span>
+    callback(node.key); <span class="hljs-comment">//访问节点</span>
+    <span class="hljs-keyword">this</span>.inOrderTraverseNode(node.right, callback); <span class="hljs-comment">//递归右子节点</span>
+  }
+}
+</code></pre>
+</section><section>
+<h2>中序遍历的使用</h2>
+<pre><code class="hljs language-javascript"><span class="hljs-comment">//定义一个访问函数</span>
+<span class="hljs-keyword">const</span> printNode = <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value); 
+<span class="hljs-comment">//中序遍历</span>
+tree.inOrderTraverse(printNode);
+</code></pre>
+</section><section>
+<h2>中序遍历的使用</h2>
+<p><img src="./img/10/3.png" alt="inOrder"></p>
+</section><section>
+<h2>先序遍历</h2>
+<ul>
+<li>节点--左子节点--右子节点，即优先后代节点访问</li>
+</ul>
+<pre><code class="hljs language-javascript">preOrderTraverse(callback) {
+  <span class="hljs-keyword">this</span>.preOrderTraverseNode(<span class="hljs-keyword">this</span>.root, callback);
+}
+preOrderTraverseNode(node, callback) {
+  <span class="hljs-keyword">if</span> (node != <span class="hljs-literal">null</span>) {
+    callback(node.key); <span class="hljs-comment">//访问节点</span>
+    <span class="hljs-keyword">this</span>.preOrderTraverseNode(node.left, callback);<span class="hljs-comment">//递归左子节点</span>
+    <span class="hljs-keyword">this</span>.preOrderTraverseNode(node.right, callback);<span class="hljs-comment">//递归右子节点</span>
+  }
+}
+</code></pre>
+</section><section>
+<h2>先序遍历的使用</h2>
+<pre><code class="hljs language-javascript"><span class="hljs-comment">//定义一个访问函数</span>
+<span class="hljs-keyword">const</span> printNode = <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value); 
+<span class="hljs-comment">//先序遍历</span>
+tree.preOrderTraverse(printNode);
+</code></pre>
+</section><section>
+<h2>先序遍历的使用</h2>
+<p><img src="./img/10/4.png" alt="preOrder"></p>
+</section><section>
+<h2>后序遍历</h2>
+<ul>
+<li>左子节点--右子节点--节点，即优先访问后代节点</li>
+</ul>
+<pre><code class="hljs language-javascript">postOrderTraverse(callback) {
+  <span class="hljs-keyword">this</span>.postOrderTraverseNode(<span class="hljs-keyword">this</span>.root, callback);
+}
+postOrderTraverseNode(node, callback) {
+  <span class="hljs-keyword">if</span> (node != <span class="hljs-literal">null</span>) {
+    <span class="hljs-keyword">this</span>.postOrderTraverseNode(node.left, callback);<span class="hljs-comment">//递归左子节点</span>
+    <span class="hljs-keyword">this</span>.postOrderTraverseNode(node.right, callback);<span class="hljs-comment">//递归右子节点</span>
+    callback(node.key); <span class="hljs-comment">//访问节点</span>
+  }
+}
+</code></pre>
+</section><section>
+<h2>后序遍历的使用</h2>
+<pre><code class="hljs language-javascript"><span class="hljs-comment">//定义一个访问函数</span>
+<span class="hljs-keyword">const</span> printNode = <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value); 
+<span class="hljs-comment">//先序遍历</span>
+tree.preOrderTraverse(printNode);
+</code></pre>
+</section><section>
+<h2>后序遍历的使用</h2>
+<p><img src="./img/10/5.png" alt="postOrder"></p>
+</section><section>
+<h2>搜索最大值最小值</h2>
+<p><img src="./img/10/6.png" alt="maxmin"></p>
+</section><section>
+<h2>搜索最小值</h2>
+<ul>
+<li>找最左边的叶子节点即为最小值</li>
+</ul>
+<pre><code class="hljs language-javascript">min() {
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.minNode(<span class="hljs-keyword">this</span>.root);
+}
+minNode(node) {
+  <span class="hljs-keyword">let</span> current = node;
+  <span class="hljs-comment">//找最左边的叶子节点</span>
+  <span class="hljs-keyword">while</span> (current != <span class="hljs-literal">null</span> &amp;&amp; current.left != <span class="hljs-literal">null</span>) {
+    current = current.left;
+  }
+  <span class="hljs-keyword">return</span> current;
+}
+</code></pre>
+</section><section>
+<h2>搜索最大值</h2>
+<ul>
+<li>找最右边的叶子节点即为最小值</li>
+</ul>
+<pre><code class="hljs language-javascript">max() {
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.minNode(<span class="hljs-keyword">this</span>.root);
+}
+maxNode(node) {
+  <span class="hljs-keyword">let</span> current = node;
+  <span class="hljs-comment">//找最左边的叶子节点</span>
+  <span class="hljs-keyword">while</span> (current != <span class="hljs-literal">null</span> &amp;&amp; current.right != <span class="hljs-literal">null</span>) {
+    current = current.right;
+  }
+  <span class="hljs-keyword">return</span> current;
+}
+</code></pre>
+</section><section>
+<h2>搜索特定值</h2>
+<pre><code class="hljs language-javascript">search(key) {
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.searchNode(<span class="hljs-keyword">this</span>.root, key);
+}
+
+searchNode(node, key) {
+  <span class="hljs-keyword">if</span> (node == <span class="hljs-literal">null</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+  }
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.compareFn(key, node.key) === <span class="hljs-number">-1</span>) { <span class="hljs-comment">//key &lt; node.key</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.searchNode(node.left, key); <span class="hljs-comment">//搜索左子树</span>
+  } <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.compareFn(key, node.key) === <span class="hljs-number">1</span>) { <span class="hljs-comment">//key &gt; node.key</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.searchNode(node.right, key); <span class="hljs-comment">//搜索右子树</span>
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+}
+</code></pre>
+</section><section>
+<h2>删除</h2>
+<ul>
+<li>第一步，找到要删除的节点</li>
+<li>第二步，删除该节点，分三种情况
+<ul>
+<li>该节点为叶子节点时，node = null,直接删除即可</li>
+<li>该节点只有一个子节点时，父节点指向子节点即可</li>
+<li>该节点有两个子节点时，分三步
+<ul>
+<li>第一步找到该节点右子树上最小值节点</li>
+<li>第二步将最小值节点值赋给该节点</li>
+<li>第三步删除该节点右子树上最小值节点</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section><section>
+<h2>删除叶节点</h2>
+<p><img src="./img/10/7.png" alt="leaf"></p>
+</section><section>
+<h2>只有一个子节点</h2>
+<p><img src="./img/10/8.png" alt="leaf"></p>
+</section><section>
+<h2>有两个子节点</h2>
+<p><img src="./img/10/9.png" alt="leaf"></p>
+</section><section>
+<h2>删除</h2>
+<pre><code class="hljs language-javascript">remove(key) {
+    <span class="hljs-keyword">this</span>.root = <span class="hljs-keyword">this</span>.removeNode(<span class="hljs-keyword">this</span>.root, key);
+}
+removeNode(node, key) {
+    <span class="hljs-comment">//没找到</span>
+    <span class="hljs-keyword">if</span> (node == <span class="hljs-literal">null</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    }
+    <span class="hljs-comment">//查找节点</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.compareFn(key, node.key) === Compare.LESS_THAN) {
+        node.left = <span class="hljs-keyword">this</span>.removeNode(node.left, key);
+        <span class="hljs-keyword">return</span> node;
+    } <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.compareFn(key, node.key) === Compare.BIGGER_THAN) {
+        node.right = <span class="hljs-keyword">this</span>.removeNode(node.right, key);
+        <span class="hljs-keyword">return</span> node;
+    }
+    <span class="hljs-comment">// 删除该节点</span>
+    <span class="hljs-comment">// 叶子节点</span>
+    <span class="hljs-keyword">if</span> (node.left == <span class="hljs-literal">null</span> &amp;&amp; node.right == <span class="hljs-literal">null</span>) {
+        node = <span class="hljs-literal">undefined</span>;
+        <span class="hljs-keyword">return</span> node;
+    }
+    <span class="hljs-comment">// 只有一个子节点</span>
+    <span class="hljs-keyword">if</span> (node.left == <span class="hljs-literal">null</span>) {
+        node = node.right;
+        <span class="hljs-keyword">return</span> node;
+    } <span class="hljs-keyword">if</span> (node.right == <span class="hljs-literal">null</span>) {
+        node = node.left;
+        <span class="hljs-keyword">return</span> node;
+    }
+    <span class="hljs-comment">// 有两个子节点</span>
+    <span class="hljs-keyword">const</span> aux = <span class="hljs-keyword">this</span>.minNode(node.right);
+    node.key = aux.key;
+    node.right = <span class="hljs-keyword">this</span>.removeNode(node.right, aux.key);
+    <span class="hljs-keyword">return</span> node;
+}
+</code></pre>
+</section><section>
+<h2>任务</h2>
+<blockquote>
+<p>设计一个二叉搜索树，向树中插入1,2,3,4,5,6,7,8,9,10,分别用先序、中序、后序方式遍历该树。</p>
+</blockquote>
+</section>
+        </div>
+    </div>
+    <script src="https://cdn.bootcss.com/reveal.js/3.8.0/js/reveal.min.js"></script>
+    <script>
+    Reveal.initialize({
+        hash: true,
+        dependencies: []
+    });
+    </script>
+</body>
+
+</html>
