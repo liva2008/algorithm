@@ -55,12 +55,20 @@
     </style>
     <link rel="stylesheet" href="https://cdn.bootcss.com/reveal.js/3.8.0/css/reveal.min.css">
     <link rel="stylesheet" href="https://cdn.bootcss.com/reveal.js/3.8.0/css/theme/moon.min.css">
-    
+	
     <script>
         hljs.initHighlightingOnLoad();
         hljs.initLineNumbersOnLoad({
             singleLine: true
         });
+    </script>
+	
+	<script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'https://cdn.bootcss.com/reveal.js/3.8.0/css/print/pdf.min.css' : 'https://cdn.bootcss.com/reveal.js/3.8.0/css/print/paper.min.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
     </script>
 </head>
 
@@ -471,6 +479,7 @@ removeNode(node, key) {
         dependencies: []
     });
     </script>
+
 </body>
 
 </html>
