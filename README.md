@@ -13,5 +13,7 @@
 - [字典(Map)](http://algorithm.jscoding.net/map.html)
 - [散列表(HashMap)](http://algorithm.jscoding.net/hashmap.html)
 - [递归(Recursion)](http://algorithm.jscoding.net/recursion.html)
-
+- [树(Tree)](http://algorithm.jscoding.net/tree.html)
+- [平衡树(Balanced Tree)](http://algorithm.jscoding.net/tree2.html)
+- [堆(Heap)](http://algorithm.jscoding.net/heap.html)
 推荐大家使用google chrome 或mozilla firefox浏览器观看PPT。
